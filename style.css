@@ -1,0 +1,388 @@
+/* 공통 설정 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  color: #222;
+  padding-bottom: 60px; /* 하단바 공간 */
+}
+
+/* 상단 헤더 */
+.main-header {
+  text-align: center;
+  padding: 16px 0;
+}
+.team-logo {
+  width: 120px;
+  max-width: 50%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.team-name {
+  font-size: 1.5rem;
+  color: #7a003c;
+  margin-top: 8px;
+}
+
+/* 경기 정보 박스 */
+.match-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px;
+}
+.match-box {
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  padding: 12px;
+}
+.match-box h2 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+.match-info p {
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+/* 하단바 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #ddd;
+}
+.nav-item {
+  flex: 1;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333;
+  text-decoration: none;
+  padding: 8px 0;
+}
+.nav-item.active {
+  color: #7a003c;
+}
+
+/* 반응형: 작은 화면 */
+@media (max-width: 480px) {
+  .team-logo {
+    width: 80px;
+  }
+  .team-name {
+    font-size: 1.2rem;
+  }
+  .bottom-bar {
+    height: 45px;
+  }
+  .match-box {
+    padding: 10px;
+  }
+}
+
+/* --- (중략) 기존 스타일 --- */
+
+/* 하단바: .bottom-bar 및 .bottom-nav 공통 스타일 */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/*— 콘텐츠가 하단바에 가려지지 않도록 —*/
+body {
+  padding-bottom: 60px; /* 하단바 높이와 동일하게 */
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;            /* 원하는 높이로 고정 */
+  display: flex;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+  box-sizing: border-box;  /* padding 포함 높이 계산 */
+  z-index: 1000;           /* 혹시 다른 요소에 가려질 때 */
+}
+
+/*— 버튼 flex 중앙 정렬 —*/
+.bottom-nav .nav-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;     /* 세로 중앙 */
+  justify-content: center; /* 가로 중앙 */
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/*— 활성화된 버튼 —*/
+.bottom-nav .nav-btn.active {
+  color: #7a003c;
+  font-weight: bold;
+}
+
+/*— 눌림 효과 —*/
+.bottom-nav .nav-btn:active {
+  background-color: #f5f5f5;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .bottom-bar,
+  .bottom-nav {
+    height: 45px;
+  }
+}
+
+.match-date {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.match-box {
+  text-align: center;
+}
+
+.match-info {
+  text-align: center;
+}
+
+/* match-date에도 보장 */
+.match-date {
+  text-align: center;
+}
+
+/* 페이지 콘텐츠가 하단바에 가려지지 않도록 */
+body {
+  padding-bottom: 60px; /* 하단바 높이와 동일하게 */
+}
+
+/* 하단바 고정 높이 및 레이아웃 */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;          /* 하단바 높이 고정 */
+  display: flex;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+  box-sizing: border-box; /* 패딩 포함 높이 계산 */
+}
+
+/* 버튼들도 하단바 높이에 딱 맞춰 세로 중앙 정렬 */
+.bottom-nav .nav-btn {
+  flex: 1;
+  margin: 0;              /* 불필요한 외부 여백 제거 */
+  padding: 0;             /* 상하 패딩 없앰 */
+  line-height: 60px;      /* 텍스트 세로 중앙 정렬 */
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* 활성화된 버튼 강조 */
+.bottom-nav .nav-btn.active {
+  color: #7a003c;
+  font-weight: bold;
+}
+
+.bottom-nav .nav-btn:active {
+  background-color: #f5f5f5;
+}
+
+
+/* ========== 기록 페이지용 CSS ========== */
+
+/* 컨트롤(연도 선택 + 필터 버튼) */
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.controls select,
+.controls button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 테이블 래퍼: 가로 스크롤 */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  padding-bottom: 60px; /* 하단바 가림 방지 */
+  margin: 0 auto;
+}
+
+/* 레코드 테이블 */
+.records-table {
+  min-width: 800px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.records-table th,
+.records-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.records-table th {
+  background: #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* 첫 번째 컬럼 고정 */
+.records-table th:first-child,
+.records-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: #fafafa;
+  z-index: 3;
+}
+
+/* 선수명 클릭 가능 표시 */
+.player-name {
+  color: #007BFF;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* 하단 네비게이션 (이미 추가된 것들 중복되지 않게 확인) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.bottom-nav .nav-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.bottom-nav .nav-btn.active {
+  color: #7a003c;
+  font-weight: bold;
+}
+
+.bottom-nav .nav-btn:active {
+  background-color: #f5f5f5;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .controls select,
+  .controls button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  .records-table th,
+  .records-table td {
+    padding: 6px;
+    font-size: 12px;
+  }
+}
+
+
+/* ========== 기록 페이지 상단바 복구 ========== */
+.top-nav {
+  background-color: #7a003c;
+  color: #fff;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-nav button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  position: absolute;
+  left: 12px;
+  cursor: pointer;
+}
+
+.top-nav h1 {
+  margin: 0;
+  font-size: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+
+/* 날짜 (한 줄) */
+.date {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 4px;
+  white-space: normal; /* 날짜 줄바꿈은 필요시 허용 */
+}
+
+/* 매치업 (한 줄 고정) */
+.matchup {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 8px;
+  white-space: nowrap;       /* 절대 줄바꿈 금지 */
+  overflow: hidden;
+  text-overflow: ellipsis;   /* 너무 길면 … 처리 */
+}
