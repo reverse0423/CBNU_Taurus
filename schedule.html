@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>일정 페이지</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="schedule.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f9f9f9;
+    }
+    /* 상단바 */
+    .top-nav {
+      background-color: #7a003c;
+      color: #fff;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .top-nav button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      position: absolute;
+      left: 12px;
+      cursor: pointer;
+    }
+    .top-nav h1 {
+      margin: 0;
+      font-size: 22px;
+      text-align: center;
+      width: 100%;
+    }
+    .top-nav select {
+      position: absolute;
+      right: 12px;
+      padding: 8px;
+      font-size: 18px;
+      background: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    /* 요약 박스 */
+    .summary-box {
+      background: #fff5f5;
+      border: 1px solid #ffcccc;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px auto;
+      max-width: 600px;
+      text-align: center;
+      font-size: 18px;
+      color: #800000;
+    }
+    .summary-box div {
+      margin: 10px 0;
+    }
+
+    /* 상세 일정 컨테이너 */
+    .schedule-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    /* 경기 박스 */
+    .game-box {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    .game-box .matchup {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .game-box .result {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .game-box .details {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* 하단 네비게이션 */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+    }
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+    }
+    .bottom-nav button.active {
+      color: #7a003c;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="top-nav">
+    <button onclick="history.back()">◀ 뒤로</button>
+    <h1>📅 경기 일정</h1>
+    <select id="yearSelector"></select>
+  </header>
+
+  <!-- 초기엔 summaryBox 보이고, 상세 일정은 숨김 -->
+  <div id="summaryBox" class="summary-box"></div>
+  <div id="scheduleContainer" class="schedule-container" style="display:none;"></div>
+
+  <nav class="bottom-nav">
+    <button onclick="location.href='index.html'">메인</button>
+    <button class="active" onclick="location.href='schedule.html'">일정</button>
+    <button onclick="location.href='records.html'">기록</button>
+    <button onclick="location.href='players.html'">선수</button>
+  </nav>
+
+  <script>
+    const scheduleData = {};
+
+    fetch('./schedule.json')
+      .then(res => res.json())
+      .then(data => {
+        Object.assign(scheduleData, data);
+        init();
+      })
+      .catch(err => console.error('JSON 로딩 실패:', err));
+
+    function init() {
+      const selector    = document.getElementById('yearSelector');
+      const summaryBox  = document.getElementById('summaryBox');
+      const scheduleBox = document.getElementById('scheduleContainer');
+
+      // 연도 옵션 채우기 (내림차순)
+      const years = ['전체', ...Object.keys(scheduleData).sort((a,b)=>b-a)];
+      years.forEach(y => {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y === '전체' ? '전체 요약' : y + '년';
+        selector.appendChild(opt);
+      });
+
+      // 초기값: 전체 요약
+      selector.value = '전체';
+      renderAllSummaries();
+
+      // 드롭다운 변경 시
+      selector.addEventListener('change', () => {
+        if (selector.value === '전체') {
+          summaryBox.style.display   = 'block';
+          scheduleBox.style.display  = 'none';
+          renderAllSummaries();
+        } else {
+          summaryBox.style.display   = 'none';
+          scheduleBox.style.display  = 'block';
+          renderYearDetails(selector.value);
+        }
+      });
+    }
+
+    // 전체 요약 렌더
+    function renderAllSummaries() {
+      const summaryBox = document.getElementById('summaryBox');
+      summaryBox.innerHTML = '';
+      const years = Object.keys(scheduleData).sort((a,b)=>b-a);
+      let allGames = [];
+
+      years.forEach(y => {
+        const games = scheduleData[y];
+        allGames = allGames.concat(games);
+        const div = document.createElement('div');
+        div.textContent = `${y}년: ${calcRecord(games)}`;
+        summaryBox.appendChild(div);
+      });
+
+      const totalDiv = document.createElement('div');
+      totalDiv.style.marginTop = '12px';
+      totalDiv.textContent = `팀 통산: ${calcRecord(allGames)}`;
+      summaryBox.appendChild(totalDiv);
+    }
+
+    // 특정 연도 상세 렌더
+    function renderYearDetails(year) {
+      const container = document.getElementById('scheduleContainer');
+      container.innerHTML = '';
+      const games = scheduleData[year] || [];
+
+      games.forEach(g => {
+        const box = document.createElement('div');
+        box.className = 'game-box';
+        box.innerHTML = `
+          <div class="matchup">${g.date} ${g.time || ''} — 충북대학교 타우루스 vs ${g.opponent}</div>
+          <div class="result">${g.score} (${g.result})</div>
+          <div class="details">
+            ${g.location}<br>
+            ${g.type}<br>
+            <a href="${g.detailLink || '#'}">상세기록 보기</a>
+          </div>
+        `;
+        container.appendChild(box);
+      });
+    }
+
+    // 승–패–무 / 승률 계산
+    function calcRecord(games) {
+      let w=0,l=0,t=0;
+      games.forEach(g => {
+        if (g.result === '승') w++;
+        else if (g.result === '패') l++;
+        else if (g.result === '무') t++;
+      });
+      const total = w + l + t;
+      const pct = total ? ((w/total)*100).toFixed(1)+'%' : '0.0%';
+      return `${w}승 ${l}패${t? ' '+t+'무' : ''} / 승률: ${pct}`;
+    }
+  </script>
+</body>
+</html>
