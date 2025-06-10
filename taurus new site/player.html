@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>선수 프로필</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 프로필 테이블 스타일 */
+    .profile-table {
+      width: 90%;
+      margin: 16px auto;
+      border-collapse: collapse;
+    }
+    .profile-table th,
+    .profile-table td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: left;
+    }
+    .profile-table th {
+      background: #f9f9f9;
+      width: 30%;
+    }
+
+    /* 연도 버튼 */
+    .year-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 16px;
+    }
+    .year-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      background: #eee;
+      cursor: pointer;
+    }
+    .year-btn.active {
+      background: #ddd;
+      font-weight: bold;
+    }
+
+    /* 기록 리스트 스타일 */
+    .records-list {
+      width: 90%;
+      margin: 16px auto;
+      display: grid;
+      row-gap: 12px;
+    }
+    .records-list dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 12px;
+      background: #fff;
+      column-gap: 16px;
+      row-gap: 8px;
+      align-items: center;
+    }
+    .records-list dt {
+      font-weight: bold;
+      text-align: right;
+    }
+    .records-list dd {
+      margin: 0;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav">
+    <button onclick="history.back()">◀ 뒤로</button>
+    <h1>선수 프로필</h1>
+  </header>
+
+  <main class="container">
+    <!-- 프로필 정보 테이블 -->
+    <div id="profile">
+      <table class="profile-table">
+        <tr><th>번호</th><td id="pf-id"></td></tr>
+        <tr><th>이름</th><td id="pf-name"></td></tr>
+        <tr><th>생년월일</th><td id="pf-birth"></td></tr>
+        <tr><th>출신 고교</th><td id="pf-highschool"></td></tr>
+        <tr><th>전공</th><td id="pf-major"></td></tr>
+        <tr><th>포지션</th><td id="pf-position"></td></tr>
+      </table>
+    </div>
+
+    <!-- 연도별 버튼 -->
+    <div class="year-buttons" id="yearButtons"></div>
+
+    <!-- 기록 리스트 -->
+    <div class="records-list" id="records">
+      <p style="text-align:center;">기록을 불러오는 중...</p>
+    </div>
+  </main>
+
+<nav class="bottom-nav">
+  <button onclick="location.href='index.html'">메인</button
+  <button onclick="location.href='schedule.html'">일정</button>
+  <button onclick="location.href='records.html'">기록</button>
+  <button onclick="location.href='players.html'" class="active">선수</button>
+</nav>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) {
+        document.getElementById('profile').innerHTML = '<p>잘못된 접근입니다.</p>';
+        return;
+      }
+
+      // 프로필 정보 로드
+      fetch('players.json')
+        .then(res => res.ok ? res.json() : Promise.reject(res.status))
+        .then(players => {
+          const player = players.find(p => p.id.toString() === id);
+          if (!player) throw new Error('선수를 찾을 수 없습니다.');
+          document.getElementById('pf-id').textContent = '#' + player.id;
+          document.getElementById('pf-name').textContent = player.name;
+          document.getElementById('pf-birth').textContent = player.birth;
+          document.getElementById('pf-highschool').textContent = player.highschool;
+          document.getElementById('pf-major').textContent = player.major;
+          document.getElementById('pf-position').textContent = player.position;
+        })
+        .catch(err => {
+          console.error('프로필 로드 오류:', err);
+          document.getElementById('profile').innerHTML = '<p>프로필 로드 실패</p>';
+        });
+
+      // 연도 버튼 생성 및 초기 호출
+      const years = ['2023', '2024', '2025', 'career'];
+      const yearButtons = document.getElementById('yearButtons');
+      years.forEach((y, idx) => {
+        const btn = document.createElement('button');
+        btn.textContent = y === 'career' ? '통산' : y;
+        btn.className = 'year-btn';
+        btn.dataset.year = y;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          loadRecords(y, id);
+        });
+        yearButtons.appendChild(btn);
+        if (idx === 0) btn.classList.add('active');
+      });
+
+      // 기록 로드 및 리스트 생성
+      function loadRecords(year, playerId) {
+        const file = year === 'career' ? 'records_career.json' : `records_${year}.json`;
+        const recContainer = document.getElementById('records');
+        recContainer.innerHTML = '<p style="text-align:center;">불러오는 중...</p>';
+        fetch(file)
+          .then(res => res.ok ? res.json() : Promise.reject(res.status))
+          .then(data => {
+            const rec = data.find(r => r.number.toString() === playerId);
+            if (!rec) {
+              recContainer.innerHTML = '<p style="text-align:center;">해당 연도 기록이 없습니다.</p>';
+              return;
+            }
+
+            // 필드 순서 및 한글 라벨 매핑
+            const fields = [
+              { key: 'pa', label: '타석' },
+              { key: 'ab', label: '타수' },
+              { key: 'hits', label: '안타' },
+              { key: 'double', label: '2루타' },
+              { key: 'triple', label: '3루타' },
+              { key: 'hr', label: '홈런' },
+              { key: 'bb', label: '4구' },
+              { key: 'hbp', label: '사구' },
+              { key: 'avg', label: '타율' },
+              { key: 'obp', label: '출루율' },
+              { key: 'slg', label: '장타율' },
+              { key: 'ops', label: 'OPS' },
+              { key: 'woba', label: 'wOBA' },
+              { key: 'babip', label: 'BABIP' },
+              { key: 'sb', label: '도루' }
+            ];
+            const floatFields = ['avg', 'obp', 'slg', 'ops', 'woba', 'babip'];
+
+            recContainer.innerHTML = '';
+            // dl 리스트로 세로 나열
+            const wrapper = document.createElement('div');
+            wrapper.className = 'records-list';
+            fields.forEach(f => {
+              const dl = document.createElement('dl');
+              const dt = document.createElement('dt'); dt.textContent = f.label;
+              const dd = document.createElement('dd');
+              const value = rec[f.key];
+              dd.textContent = floatFields.includes(f.key) ? Number(value).toFixed(3) : Number(value).toString();
+              dl.append(dt, dd);
+              wrapper.appendChild(dl);
+            });
+            recContainer.appendChild(wrapper);
+          })
+          .catch(err => {
+            console.error('기록 로드 오류:', err);
+            recContainer.innerHTML = '<p style="text-align:center;">기록 로드 실패</p>';
+          });
+      }
+
+      // 초기 2023 기록 로드
+      loadRecords('2023', id);
+    });
+  </script>
+</body>
+</html>
