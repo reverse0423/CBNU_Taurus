@@ -1,0 +1,499 @@
+{
+  "2023": [
+  {
+    "date": "2023-03-11",
+    "time": "11:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "동림 슬러거즈",
+    "score": "9:4",
+    "result": "승",
+    "detailId": "2023-01"
+  },
+  {
+    "date": "2023-03-25",
+    "time": "11:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "젠틀몬스터즈",
+    "score": "11:8",
+    "result": "승",
+    "detailId": "2023-02"
+  },
+  {
+    "date": "2023-04-01",
+    "time": "12:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "동림 슬러거즈",
+    "score": "13:6",
+    "result": "승",
+    "detailId": "2023-03"
+  },
+  {
+    "date": "2023-05-13",
+    "time": "10:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "젠틀몬스터즈",
+    "score": "2:7",
+    "result": "패",
+    "detailId": "2023-04"
+  },
+  {
+    "date": "2023-05-27",
+    "time": "08:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "타우루스 메모리즈",
+    "score": "10:5",
+    "result": "승",
+    "detailId": "2023-05"
+  },
+  {
+    "date": "2023-06-10",
+    "time": "10:00",
+    "location": "청주야구장",
+    "type": "청주시 북부리그",
+    "opponent": "파워몬스터즈",
+    "score": "0:13",
+    "result": "패",
+    "detailId": "2023-06"
+  },
+  {
+    "date": "2023-06-24",
+    "time": "08:00",
+    "location": "성무야구장",
+    "type": "청주시 북부리그",
+    "opponent": "타우루스 메모리즈",
+    "score": "2:6",
+    "result": "패",
+    "detailId": "2023-07"
+  },
+  {
+    "date": "2023-07-16",
+    "time": "09:00",
+    "location": "농협대학교야구장",
+    "type": "KUSF",
+    "opponent": "한서대학교 크라이시스",
+    "score": "10:2",
+    "result": "승",
+    "detailId": "2023-08"
+  },
+  {
+    "date": "2023-07-16",
+    "time": "11:00",
+    "location": "농협대학교야구장",
+    "type": "KUSF",
+    "opponent": "경희대학교 브레이브스",
+    "score": "12:6",
+    "result": "승",
+    "detailId": "2023-09"
+  },
+  {
+    "date": "2023-07-20",
+    "time": "09:00",
+    "location": "농협대학교야구장",
+    "type": "KUSF",
+    "opponent": "한성대학교 터틀스",
+    "score": "4:5",
+    "result": "패",
+    "detailId": "2023-10"
+  },
+  {
+    "date": "2023-07-29",
+    "time": "14:20",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "KT",
+    "score": "8:8",
+    "result": "무",
+    "detailId": "2023-11"
+  },
+  {
+    "date": "2023-08-05",
+    "time": "12:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "오창헌터스",
+    "score": "8:9",
+    "result": "패",
+    "detailId": "2023-12"
+  },
+  {
+    "date": "2023-08-21",
+    "time": "08:00",
+    "location": "양구",
+    "type": "KUBA",
+    "opponent": "상지대학교 레이더스",
+    "score": "5:2",
+    "result": "승",
+    "detailId": "2023-13"
+  },
+  {
+    "date": "2023-08-21",
+    "time": "16:00",
+    "location": "양구",
+    "type": "KUBA",
+    "opponent": "동국대학교 LAE",
+    "score": "3:7",
+    "result": "패",
+    "detailId": "2023-14"
+  },
+  {
+    "date": "2023-08-23",
+    "time": "08:00",
+    "location": "양구",
+    "type": "KUBA",
+    "opponent": "아주대학교 ABBA",
+    "score": "5:6",
+    "result": "패",
+    "detailId": "2023-15"
+  },
+  {
+    "date": "2023-09-09",
+    "time": "14:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "오창헌터스",
+    "score": "8:4",
+    "result": "승",
+    "detailId": "2023-16"
+  },
+  {
+    "date": "2023-09-23",
+    "time": "16:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "KT",
+    "score": "12:10",
+    "result": "승",
+    "detailId": "2023-17"
+  },
+  {
+    "date": "2023-10-21",
+    "time": "14:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "젠틀몬스터즈",
+    "score": "9:4",
+    "result": "승",
+    "detailId": "2023-18"
+  },
+  {
+    "date": "2023-10-21",
+    "time": "16:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "파워몬스터즈",
+    "score": "6:8",
+    "result": "패",
+    "detailId": "2023-19"
+  },
+  {
+    "date": "2023-10-28",
+    "time": "14:00",
+    "location": "제천야구장",
+    "type": "KUBA",
+    "opponent": "중앙대학교 랑데뷰",
+    "score": "0:12",
+    "result": "패",
+    "detailId": "2023-20"
+  },
+  {
+    "date": "2023-10-28",
+    "time": "16:00",
+    "location": "제천야구장",
+    "type": "KUBA",
+    "opponent": "한양대학교 디독스",
+    "score": "12:6",
+    "result": "승",
+    "detailId": "2023-21"
+  }
+  ],
+  "2024": [
+  {
+    "date": "2024-03-02",
+    "time": "14:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "AM",
+    "score": "9:11",
+    "result": "패",
+    "detailId": "2024-01"
+  },
+  {
+    "date": "2024-03-09",
+    "time": "08:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "네이처택",
+    "score": "1:13",
+    "result": "패",
+    "detailId": "2024-02"
+  },
+  {
+    "date": "2024-04-20",
+    "time": "12:00",
+    "location": "내수야구장",
+    "type": "청주시 북부리그",
+    "opponent": "카이맨",
+    "score": "15:9",
+    "result": "승",
+    "detailId": "2024-03"
+  },
+  {
+    "date": "2024-04-27",
+    "time": "16:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "더그아웃",
+    "score": "5:4",
+    "result": "승",
+    "detailId": "2024-04"
+  },
+  {
+    "date": "2024-05-18",
+    "time": "14:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "오창헌터스",
+    "score": "13:1",
+    "result": "승",
+    "detailId": "2024-05"
+  },
+  {
+    "date": "2024-05-25",
+    "time": "10:00",
+    "location": "성무야구장",
+    "type": "청주시 북부리그",
+    "opponent": "AM",
+    "score": "8:16",
+    "result": "패",
+    "detailId": "2024-06"
+  },
+  {
+    "date": "2024-06-01",
+    "time": "08:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "썬더스",
+    "score": "4:5",
+    "result": "패",
+    "detailId": "2024-07"
+  },
+  {
+    "date": "2024-06-15",
+    "time": "12:00",
+    "location": "내수야구장",
+    "type": "청주시 북부리그",
+    "opponent": "조아조아",
+    "score": "8:4",
+    "result": "승",
+    "detailId": "2024-08"
+  },
+  {
+    "date": "2024-06-22",
+    "time": "10:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "카이맨",
+    "score": "5:9",
+    "result": "패",
+    "detailId": "2024-09"
+  },
+  {
+    "date": "2024-07-06",
+    "time": "10:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "더그아웃",
+    "score": "9:8",
+    "result": "승",
+    "detailId": "2024-10"
+  },
+  {
+    "date": "2024-07-16",
+    "time": "14:00",
+    "location": "제천야구장",
+    "type": "KUBA",
+    "opponent": "선문대학교 루나스틱",
+    "score": "8:3",
+    "result": "승",
+    "detailId": "2024-11"
+  },
+  {
+    "date": "2024-07-17",
+    "time": "09:00",
+    "location": "제천야구장",
+    "type": "KUBA",
+    "opponent": "한국공학대학교 위너스",
+    "score": "2:3",
+    "result": "패",
+    "detailId": "2024-12"
+  },
+  {
+    "date": "2024-07-27",
+    "time": "12:00",
+    "location": "성무야구장",
+    "type": "청주시 북부리그",
+    "opponent": "조아조아",
+    "score": "7:6",
+    "result": "승",
+    "detailId": "2024-13"
+  },
+  {
+    "date": "2024-08-10",
+    "time": "14:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "썬더스",
+    "score": "7:20",
+    "result": "패",
+    "detailId": "2024-14"
+  },
+  {
+    "date": "2024-08-20",
+    "time": "14:30",
+    "location": "양구야구장",
+    "type": "KUBA",
+    "opponent": "명지대학교 나이너스",
+    "score": "11:1",
+    "result": "승",
+    "detailId": "2024-15"
+  },
+  {
+    "date": "2024-08-22",
+    "time": "09:00",
+    "location": "양구야구장",
+    "type": "KUBA",
+    "opponent": "경기대학교 KGB",
+    "score": "2:11",
+    "result": "패",
+    "detailId": "2024-16"
+  },
+  {
+    "date": "2024-08-31",
+    "time": "16:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "오창헌터스",
+    "score": "5:15",
+    "result": "패",
+    "detailId": "2024-17"
+  },
+  {
+    "date": "2024-10-12",
+    "time": "14:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "네이처택",
+    "score": "5:6",
+    "result": "패",
+    "detailId": "2024-18"
+  }
+],
+"2025": [
+  {
+    "date": "2025-02-15",
+    "time": "13:30",
+    "location": "청주야구장",
+    "type": "친선경기",
+    "opponent": "홍익대학교 HID",
+    "score": "6:13",
+    "result": "패",
+    "detailId": "2025-01"
+  },
+  {
+    "date": "2025-03-29",
+    "time": "10:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "오창한터스",
+    "score": "11:11",
+    "result": "무",
+    "detailId": "2025-02"
+  },
+  {
+    "date": "2025-04-12",
+    "time": "12:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "네이처택",
+    "score": "11:9",
+    "result": "승",
+    "detailId": "2025-03"
+  },
+  {
+    "date": "2025-04-19",
+    "time": "10:00",
+    "location": "내수야구장",
+    "type": "청주시 북부리그",
+    "opponent": "청주SK하이닉스",
+    "score": "13:6",
+    "result": "승",
+    "detailId": "2025-04"
+  },
+  {
+    "date": "2025-05-03",
+    "time": "14:00",
+    "location": "내수야구장",
+    "type": "청주시 북부리그",
+    "opponent": "청주 스왈로우즈",
+    "score": "5:24",
+    "result": "패",
+    "detailId": "2025-05"
+  },
+  {
+    "date": "2025-05-17",
+    "time": "14:00",
+    "location": "내수야구장",
+    "type": "청주시 북부리그",
+    "opponent": "청주 스왈로우즈",
+    "score": "5:7",
+    "result": "패",
+    "detailId": "2025-06"
+  },
+  {
+    "date": "2025-05-24",
+    "time": "12:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "곰탱이",
+    "score": "2:11",
+    "result": "패",
+    "detailId": "2025-07"
+  },
+  {
+    "date": "2025-06-14",
+    "time": "09:00",
+    "location": "청주야구장",
+    "type": "청주시생활체육대회",
+    "opponent": "니나노",
+    "score": "",
+    "result": "",
+    "detailId": "2025-08"
+  },
+  {
+    "date": "2025-06-21",
+    "time": "08:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "메이에르",
+    "score": "",
+    "result": "",
+    "detailId": "2025-09"
+  },
+  {
+    "date": "2025-06-28",
+    "time": "12:00",
+    "location": "청원야구장",
+    "type": "청주시 북부리그",
+    "opponent": "네이처택",
+    "score": "",
+    "result": "",
+    "detailId": "2025-10"
+  }
+]
+}
+

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>일정 페이지</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="schedule.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f9f9f9;
+    }
+    /* 상단바: 기록 페이지 .top-nav 스타일과 동일 */
+    .top-nav {
+      background-color: #7a003c;
+      color: #fff;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .top-nav button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      position: absolute;
+      left: 12px;
+      cursor: pointer;
+    }
+    .top-nav h1 {
+      margin: 0;
+      font-size: 20px;
+      text-align: center;
+      width: 100%;
+    }
+    /* 기존 header select 위치 유지 */
+    .top-nav select {
+      position: absolute;
+      right: 12px;
+      margin-top: 0;
+      padding: 6px;
+      font-size: 16px;
+      background: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .summary-box {
+      background: #fff5f5;
+      border: 1px solid #ffcccc;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 16px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: bold;
+      color: #800000;
+    }
+    .schedule-container {
+      padding: 16px;
+    }
+    .game-box {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .game-box .matchup {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .game-box .result {
+      font-size: 15px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .game-box .details {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+    }
+    .bottom-nav button.active {
+      color: #7a003c;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav">
+    <button onclick="history.back()">◀ 뒤로</button>
+    <h1>📅 경기 일정</h1>
+    <select id="yearSelector"></select>
+  </header>
+
+  <div id="summaryBox" class="summary-box"></div>
+
+  <div id="scheduleContainer" class="schedule-container"></div>
+
+  <nav class="bottom-nav">
+    <button onclick="location.href='main.html'">메인</button>
+    <button class="active" onclick="location.href='schedule.html'">일정</button>
+    <button onclick="location.href='records.html'">기록</button>
+    <button onclick="location.href='players.html'">선수</button>
+  </nav>
+
+  <script>
+    const scheduleData = {};
+
+    fetch('./schedule.json')
+      .then(res => res.json())
+      .then(data => {
+        Object.assign(scheduleData, data);
+        populateYearSelector();
+        renderAllSummaries();
+        renderSchedule('전체');
+      })
+      .catch(error => console.error('JSON 로딩 실패:', error));
+
+    function populateYearSelector() {
+      const selector = document.getElementById('yearSelector');
+      const years = ['전체', ...Object.keys(scheduleData).sort()];
+      years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        selector.appendChild(option);
+      });
+
+      selector.addEventListener('change', () => {
+        renderSchedule(selector.value);
+      });
+    }
+
+    function calculateSummary(games) {
+      let win = 0, loss = 0, tie = 0;
+      games.forEach(game => {
+        if (game.result && game.score) {
+          if (game.result === '승') win++;
+          else if (game.result === '패') loss++;
+          else if (game.result === '무') tie++;
+        }
+      });
+      const total = win + loss + tie;
+      const winRate = total > 0 ? (win / total * 100).toFixed(1) : '0.0';
+      return `${win}승 ${loss}패 ${tie}무 / 승률: ${winRate}%`;
+    }
+
+    function renderAllSummaries() {
+      const summaryBox = document.getElementById('summaryBox');
+      summaryBox.innerHTML = '';
+      const years = Object.keys(scheduleData).sort();
+      let allGames = [];
+
+      years.forEach(year => {
+        const games = scheduleData[year];
+        allGames = allGames.concat(games);
+        const summary = calculateSummary(games);
+        const div = document.createElement('div');
+        div.textContent = `${year} 통산: ${summary}`;
+        summaryBox.appendChild(div);
+      });
+
+      const totalSummary = calculateSummary(allGames);
+      const totalDiv = document.createElement('div');
+      totalDiv.style.marginTop = '8px';
+      totalDiv.textContent = `팀 통산: ${totalSummary}`;
+      summaryBox.appendChild(totalDiv);
+    }
+
+    function renderSchedule(year) {
+      const container = document.getElementById('scheduleContainer');
+      container.innerHTML = '';
+
+      const games = year === '전체'
+        ? Object.values(scheduleData).flat()
+        : scheduleData[year] || [];
+
+      games.forEach(game => {
+        const box = document.createElement('div');
+        box.className = 'game-box';
+
+        const opponent = game.opponent || '상대팀';
+        const date = game.date || '날짜 미정';
+        const location = game.location || '장소 미정';
+        const league = game.type || game.league || '리그 미정';
+        const score = game.score || '?:?';
+        const outcome = game.result || '';
+        const detailLink = game.detailLink || '#';
+
+        box.innerHTML = `
+          <div class="matchup">충북대학교 타우루스 vs ${opponent}</div>
+          <div class="result">${score} (${outcome})</div>
+          <div class="details">
+            ${date}<br>
+            ${location}<br>
+            ${league}<br>
+            <a href="${detailLink}">상세기록 보기</a>
+          </div>
+        `;
+
+        container.appendChild(box);
+      });
+    }
+  </script>
+</body>
+</html>
+
+

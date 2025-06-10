@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Taurus</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="top-bar">
+    <h2>About Taurus</h2>
+  </div>
+
+  <div class="year-selector">
+    <select id="yearSelect" onchange="loadYearData()">
+      <option value="2025">2025</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="total">통산</option>
+    </select>
+  </div>
+
+  <div id="aboutContent" class="about-content"></div>
+
+
+<nav class="bottom-nav">
+  <button onclick="location.href='main.html'">메인</button>
+  <button onclick="location.href='schedule.html'">일정</button>
+  <button onclick="location.href='records.html'">기록</button>
+  <button onclick="location.href='players.html'" class="active">선수</button>
+</nav>
+
+
+  <script src="about.js"></script>
+</body>
+</html>
