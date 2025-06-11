@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>일정 페이지</title>
+
+  <!-- 외부 스타일시트 -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- 외부 스크립트 (schedule.js) -->
+  <script defer src="schedule.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding-bottom: 60px; /* 하단바 높이만큼 여백 */
+    }
+    /* 상단바 */
+    .top-nav {
+      background-color: #7a003c;
+      color: #fff;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .top-nav button {
+      position: absolute;
+      left: 12px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .top-nav h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .top-nav select {
+      position: absolute;
+      right: 12px;
+      padding: 8px;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    /* 경기 일정용 컨테이너 */
+    .schedule-container {
+      padding: 16px;
+    }
+    /* 요약박스 (schedule.js 에서 class="summary-box" 로 생성) */
+    .summary-box {
+      background: #fff5f5;
+      border: 1px solid #ffcccc;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px auto;
+      max-width: 600px;
+      text-align: center;
+      font-size: 18px;
+      color: #800000;
+    }
+    /* 개별 경기박스 (schedule.js 에서 class="game-box" 로 생성) */
+    .game-box {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 0 auto 20px;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .game-box .date {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .game-box .matchup {
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .game-box .result {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .game-box .details {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+    /* 하단 네비게이션 */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-sizing: border-box;
+    }
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      flex: 1;
+    }
+    .bottom-nav button.active {
+      color: #7a003c;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="top-nav">
+    <button onclick="history.back()">◀ 뒤로</button>
+    <h1>📅 경기 일정</h1>
+    <select id="yearSelector"></select>
+  </header>
+
+  <!-- 스케줄 / 요약 모두 이 안에 뿌려집니다 -->
+  <div id="scheduleContainer" class="schedule-container"></div>
+
+  <nav class="bottom-nav">
+    <button onclick="location.href='index.html'">메인</button>
+    <button class="active" onclick="location.href='schedule.html'">일정</button>
+    <button onclick="location.href='records.html'">기록</button>
+    <button onclick="location.href='players.html'">선수</button>
+  </nav>
+</body>
+</html>
