@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>선수 프로필</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background-color: #7a003c;
+      color: white;
+    }
+    .top-nav h1 {
+      margin: 0 auto;
+      font-size: 18px;
+    }
+
+    .profile-table {
+      width: 90%;
+      margin: 16px auto;
+      border-collapse: collapse;
+    }
+    .profile-table th,
+    .profile-table td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: left;
+    }
+    .profile-table th {
+      background: #f9f9f9;
+      width: 30%;
+    }
+
+    .year-buttons {
+      display: flex;
+      justify-content: center;
+      margin: 16px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #eee;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 14px;
+    }
+    .bottom-nav .active {
+      font-weight: bold;
+      color: #7a003c;
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 내비게이션 -->
+  <header class="top-nav">
+    <button onclick="history.back()">◀ 뒤로</button>
+    <h1>선수 프로필</h1>
+  </header>
+
+  <main class="container">
+    <!-- 프로필 정보 -->
+    <table class="profile-table">
+      <tr><th>번호</th><td id="number">–</td></tr>
+      <tr><th>이름</th><td id="name">–</td></tr>
+      <tr><th>생년월일</th><td id="birth">–</td></tr>
+      <tr><th>출신 고교</th><td id="highschool">–</td></tr>
+      <tr><th>전공</th><td id="major">–</td></tr>
+      <tr><th>포지션</th><td id="position">–</td></tr>
+    </table>
+
+    <!-- 연도 선택 (기본값 2025) -->
+    <div class="year-buttons">
+      <select id="year-select">
+        <option value="2025" selected>2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="total">통산</option>
+      </select>
+    </div>
+
+    <!-- 기록 출력 -->
+    <div id="record-box">
+      <p style="text-align:center;">기록을 불러오는 중...</p>
+    </div>
+  </main>
+
+  <!-- 하단 내비게이션 -->
+  <nav class="bottom-nav">
+    <button onclick="location.href='index.html'">메인</button>
+    <button onclick="location.href='schedule.html'">일정</button>
+    <button onclick="location.href='records.html'">기록</button>
+    <button class="active" onclick="location.href='players.html'">선수</button>
+  </nav>
+
+  <script src="player.js"></script>
+</body>
+</html>
