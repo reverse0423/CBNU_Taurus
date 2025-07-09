@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기록</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 상단바: 일정 페이지와 동일하게 */
+    .top-nav {
+      background-color: #7a003c;
+      color: #fff;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .top-nav button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      position: absolute;
+      left: 12px;
+      cursor: pointer;
+    }
+    .top-nav h1 {
+      margin: 0;
+      font-size: 20px;
+      text-align: center;
+      width: 100%;
+    }
+    /* 컨트롤 영역 */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 12px;
+      flex-wrap: wrap;
+    }
+    .controls select, .controls button {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    /* 테이블 컨테이너: 모바일 가로 스크롤 */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 0 auto 60px;
+      width: 100%;
+    }
+    /* 기록 테이블 스타일 */
+    .records-table {
+      min-width: 800px; /* 모바일에서 가로 스크롤 활성화 */
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .records-table th, .records-table td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .records-table th {
+      background: #f0f0f0;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      cursor: pointer;
+    }
+    /* 고정 첫 열 */
+    .records-table th:first-child, 
+    .records-table td:first-child {
+      position: sticky;
+      left: 0;
+      background: #fafafa;
+      z-index: 3;
+    }
+    /* 모바일 반응형 */
+    @media(max-width: 480px) {
+      .top-nav h1 { font-size: 18px; }
+      .controls { margin: 8px; }
+      .controls select, .controls button { font-size: 12px; padding: 6px 10px; }
+      .records-table th, .records-table td { padding: 6px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav">
+    <button onclick="history.back()">◀</button>
+    <h1>기록</h1>
+  </header>
+  <main>
+    <div class="controls">
+      <select id="yearSelect">
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025" selected>2025</option>
+        <option value="career">통산</option>
+      </select>
+      <button id="filterBtn" style="display:none;">규정타석 기준</button>
+    </div>
+    <div class="table-wrapper">
+      <table class="records-table" id="recordsTable">
+        <thead><tr id="theadRow"></tr></thead>
+        <tbody id="tbodyRows"></tbody>
+      </table>
+    </div>
+  </main>
+   <nav class="bottom-nav">
+    <button class="nav-btn" onclick="location.href='index.html'">메인</button>
+    <button class="nav-btn" onclick="location.href='schedule.html'">일정</button>
+    <button class="nav-btn" onclick="location.href='records.html'">기록</button>
+    <button class="nav-btn active" onclick="location.href='players.html'">선수</button>
+  </nav>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const yearSelect = document.getElementById('yearSelect');
+      const filterBtn = document.getElementById('filterBtn');
+      let filterOn = false;
+      const floatFields = ['avg','obp','slg','ops','woba','babip'];
+      const fields = [
+        {key:'name',label:'선수명'},
+        {key:'pa',label:'타석'},
+        {key:'ab',label:'타수'},
+        {key:'hits',label:'안타'},
+        {key:'double',label:'2루타'},
+        {key:'triple',label:'3루타'},
+        {key:'hr',label:'홈런'},
+        {key:'RBI',label:'타점'},
+        {key:'RUN',label:'득점'},
+        {key:'sb',label:'도루'},
+        {key:'bb',label:'4구'},
+        {key:'hbp',label:'사구'},
+        {key:'avg',label:'타율'},
+        {key:'obp',label:'출루율'},
+        {key:'slg',label:'장타율'},
+        {key:'ops',label:'OPS'},
+        {key:'woba',label:'wOBA'},
+        {key:'babip',label:'BABIP'},
+        {key:'sb',label:'도루'}
+      ];
+      let currentSort = { key: 'pa', asc: false };
+
+      function renderTable(data) {
+        const thead = document.getElementById('theadRow');
+        const tbody = document.getElementById('tbodyRows');
+        thead.innerHTML = '';
+        fields.forEach(f=>{
+          const th = document.createElement('th');
+          th.textContent = f.label;
+          th.dataset.key = f.key;
+          // 정렬 이벤트
+          th.addEventListener('click', () => {
+            if (currentSort.key === f.key) currentSort.asc = !currentSort.asc;
+            else { currentSort.key = f.key; currentSort.asc = true; }
+            sortAndRender(data);
+          });
+          thead.appendChild(th);
+        });
+        sortAndRender(data);
+      }
+
+      function sortAndRender(data) {
+        let rows = data.slice();
+        if (filterOn && yearSelect.value==='career') rows = rows.filter(r=>Number(r.pa)>=40);
+        rows.sort((a,b) => {
+          let valA = a[currentSort.key];
+          let valB = b[currentSort.key];
+          if (floatFields.includes(currentSort.key)) { valA = Number(valA); valB = Number(valB); }
+          if (valA < valB) return currentSort.asc ? -1 : 1;
+          if (valA > valB) return currentSort.asc ? 1 : -1;
+          return 0;
+        });
+        const tbody = document.getElementById('tbodyRows');
+        tbody.innerHTML = '';
+        rows.forEach(r=>{
+          const tr = document.createElement('tr');
+          fields.forEach(f=>{
+            const td = document.createElement('td');
+            let val = r[f.key];
+            td.textContent = floatFields.includes(f.key) ? Number(val).toFixed(3) : val;
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+      }
+
+      function loadData(year) {
+        const file = year==='career'? 'records_career.json':`records_${year}.json`;
+        fetch(file).then(r=>r.ok?r.json():Promise.reject(r.status))
+          .then(data=>{
+            renderTable(data);
+            filterBtn.style.display = year==='career'?'inline-block':'none';
+            currentSort = { key: 'pa', asc: false };
+          }).catch(console.error);
+      }
+
+      yearSelect.addEventListener('change',()=>{ filterOn=false; filterBtn.textContent='규정타석 기준'; loadData(yearSelect.value); });
+      filterBtn.addEventListener('click',()=>{ filterOn=!filterOn; filterBtn.textContent = filterOn?'전체 보기':'규정타석 기준'; loadData(yearSelect.value); });
+
+      loadData(yearSelect.value);
+    });
+  </script>
+</body>
+</html>
