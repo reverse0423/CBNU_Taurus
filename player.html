@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>선수 프로필</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .top-nav { display:flex; justify-content:space-between; align-items:center;
+      padding:12px; background-color:#7a003c; color:white; }
+    .top-nav h1 { margin:0 auto; font-size:18px; }
+
+    .profile-table { width:90%; margin:16px auto; border-collapse:collapse; }
+    .profile-table th, .profile-table td {
+      border:1px solid #ccc; padding:12px; text-align:left;
+    }
+    .profile-table th { background:#f9f9f9; width:30%; }
+
+    .year-buttons, .record-toggle {
+      display:flex; justify-content:center; gap:8px; margin:16px;
+    }
+    .record-toggle button {
+      padding:6px 12px; border:1px solid #7a003c; border-radius:4px;
+      background:#fff; color:#7a003c; cursor:pointer; font-size:14px;
+    }
+    .record-toggle button.active {
+      background:#7a003c; color:#fff;
+    }
+
+    .stats-grid {
+      display:grid; grid-template-columns:repeat(6,1fr); gap:4px;
+      width:90%; max-width:600px; margin:0 auto 16px;
+    }
+    .grid-header { background:#f0f0f0; font-weight:bold; padding:8px 4px;
+      text-align:center; }
+    .grid-value { background:#fff; padding:12px 4px; text-align:center; }
+
+    #record-box div {
+      border:1px solid #ccc; border-radius:6px; padding:8px;
+      margin:4px 0; background:#fafafa;
+    }
+
+    #salary-box {
+      text-align:center; margin:16px auto; font-size:1.1rem;
+      font-weight:bold; color:#7a003c;
+    }
+
+    .bottom-nav {
+      position:fixed; bottom:0; left:0; right:0; background:#eee;
+      display:flex; justify-content:space-around; border-top:1px solid #ccc;
+      padding:10px 0;
+    }
+    .bottom-nav button {
+      background:none; border:none; font-size:14px;
+    }
+    .bottom-nav .active {
+      font-weight:bold; color:#7a003c;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav">
+    <button onclick="history.back()">◀ 뒤로</button>
+    <h1>선수 프로필</h1>
+  </header>
+
+  <main class="container">
+    <table class="profile-table">
+      <tr><th>번호</th><td id="number">–</td></tr>
+      <tr><th>이름</th><td id="name">–</td></tr>
+      <tr><th>생년월일</th><td id="birth">–</td></tr>
+      <tr><th>출신 고교</th><td id="highschool">–</td></tr>
+      <tr><th>전공</th><td id="major">–</td></tr>
+      <tr><th>포지션</th><td id="position">–</td></tr>
+    </table>
+
+    <div class="year-buttons">
+      <select id="year-select">
+        <option value="2025" selected>2025년</option>
+        <option value="2024">2024년</option>
+        <option value="2023">2023년</option>
+        <option value="2022">2022년</option>
+        <option value="total">통산</option>
+      </select>
+    </div>
+
+    <div class="record-toggle">
+      <button id="btn-bat" class="active">타격 기록</button>
+      <button id="btn-pit">투수 기록</button>
+    </div>
+
+    <section id="stats-grid" class="stats-grid">
+      <div class="grid-header">타율</div><div class="grid-header">타수</div>
+      <div class="grid-header">안타</div><div class="grid-header">2루타</div>
+      <div class="grid-header">3루타</div><div class="grid-header">홈런</div>
+      <div class="grid-value" id="avg">–</div><div class="grid-value" id="ab">–</div>
+      <div class="grid-value" id="hits">–</div><div class="grid-value" id="double">–</div>
+      <div class="grid-value" id="triple">–</div><div class="grid-value" id="hr">–</div>
+      <div class="grid-header">4구</div><div class="grid-header">사구</div>
+      <div class="grid-header">타점</div><div class="grid-header">장타율</div>
+      <div class="grid-header">출루율</div><div class="grid-header">OPS</div>
+      <div class="grid-value" id="bb">–</div><div class="grid-value" id="hbp">–</div>
+      <div class="grid-value" id="RBI">–</div><div class="grid-value" id="slg">–</div>
+      <div class="grid-value" id="obp">–</div><div class="grid-value" id="ops">–</div>
+    </section>
+
+    <div id="record-box">
+      <p style="text-align:center;">기록을 불러오는 중...</p>
+    </div>
+
+    <div id="salary-box"></div>
+  </main>
+
+  <nav class="bottom-nav">
+    <button onclick="location.href='index.html'">메인</button>
+    <button onclick="location.href='schedule.html'">일정</button>
+    <button onclick="location.href='records.html'">기록</button>
+    <button class="active" onclick="location.href='players.html'">선수</button>
+  </nav>
+
+  <script src="player.js"></script>
+</body>
+</html>
