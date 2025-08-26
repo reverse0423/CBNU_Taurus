@@ -1,0 +1,72 @@
+{
+    "2025-18":{
+  "detailId": "2025-18",
+  "date": "08/24",
+  "venue": "한국교원대학교 다이아몬드",
+  "status": "청주시장배생활체육대회 24강전",
+  "teams": {
+    "away": { "name": "충북대 타우루스", "abbr": "CBNU" },
+    "home": { "name": "교원대 다이아몬드", "abbr": "KNUE" }
+  },
+  "innings": [
+    { "inning": 1, "home": 4, "away": 2 },
+    { "inning": 2, "home": 2, "away": 1 },
+    { "inning": 3, "home": 4, "away": 2 },
+    { "inning": 4, "home": 4, "away": 1 },
+    { "inning": 5, "home": 0, "away": 0 },
+    { "inning": 6, "home": 0, "away": 0 }
+  ],
+  "batting": {
+    "home": [
+      { "name": "이정민", "pa": 4, "ab": 4, "hits": 1, "rbi": 1, "r": 3, "sb": 5, "bb": 0, "hbp": 0, "so": 0 },
+      { "name": "강성언", "pa": 4, "ab": 3, "hits": 1, "rbi": 2, "r": 3, "sb": 4, "bb": 1, "hbp": 0, "so": 1 },
+      { "name": "함동우", "pa": 4, "ab": 4, "hits": 2, "rbi": 4, "r": 1, "sb": 0, "bb": 0, "hbp": 0, "so": 1, "triple": 1 },
+      { "name": "신진우", "pa": 4, "ab": 4, "hits": 3, "rbi": 4, "r": 1, "sb": 6, "bb": 0, "hbp": 0, "so": 0 },
+      { "name": "김문규", "pa": 3, "ab": 1, "hits": 0, "r": 1, "sb": 3, "bb": 2, "hbp": 0, "so": 1 },
+      { "name": "이정훈", "pa": 3, "ab": 3, "hits": 0, "rbi": 1, "r": 0, "sb": 0, "bb": 0, "hbp": 0, "so": 2 },
+      { "name": "황지회", "pa": 3, "ab": 2, "hits": 2, "r": 2, "sb": 4, "bb": 1, "hbp": 0, "so": 0, "double": 1 },
+      { "name": "김준서", "pa": 2, "ab": 1, "hits": 0, "r": 0, "sb": 1, "bb": 1, "hbp": 0, "so": 1 },
+      { "name": "석지한", "pa": 1, "ab": 0, "hits": 0, "r": 1, "sb": 1, "bb": 1, "hbp": 0, "so": 0 },
+      { "name": "문정욱", "pa": 3, "ab": 1, "hits": 0, "r": 2, "sb": 0, "bb": 0, "hbp": 2, "so": 1 }
+    ],
+    "away": []
+  },
+  "pitching": {
+    "home": [
+      { "name": "한주형", "pos": "P", "ip": "2.0", "h": 4, "r": 3, "er": 3, "bb": 2, "hbp": 1, "so": 2, "hr": 0 },
+      { "name": "신진우", "pos": "P", "ip": "2.0", "h": 3, "r": 3, "er": 3, "bb": 1, "hbp": 1, "so": 3, "hr": 0 }
+    ],
+    "away": []
+  },
+  "plays": [
+    { "inning": 1, "half": "top", "no":1, "desc": "이정민 1내안 (도루,도루,득점)" },
+    { "inning": 1, "half": "top", "desc": "강성언 볼넷 (도루,득점)" },
+    { "inning": 1, "half": "top", "desc": "함동우 삼진" },
+    { "inning": 1, "half": "top", "desc": "신진우 우중안(2타점) (도루,도루,득점)" },
+    { "inning": 1, "half": "top", "desc": "김문규 볼넷 (도루,도루,득점)" },
+    { "inning": 1, "half": "top", "desc": "이정훈 1땅R(타점)" },
+    { "inning": 1, "half": "top", "desc": "황지회 볼넷 (도루)" },
+    { "inning": 1, "half": "top", "desc": "김준서 삼진" },
+    { "inning": 1, "half": "top", "desc": "문정욱 삼진" },
+    { "inning": 2, "half": "top", "desc": "이정민 투수실책 (도루,도루.득점)" },
+    { "inning": 2, "half": "top", "desc": "강성언 낫아웃 (도루,도루,득점)" },
+    { "inning": 2, "half": "top", "desc": "함동우 3땅 (타점)" },
+    { "inning": 2, "half": "top", "desc": "김문규 볼넷 (도루)" },
+    { "inning": 2, "half": "top", "desc": "이정훈 삼진" },
+    { "inning": 3, "half": "top", "desc": "황지회 중안 (도루,도루,득점)" },
+    { "inning": 3, "half": "top", "desc": "김준서 볼넷 (도루)" },
+    { "inning": 3, "half": "top", "desc": "문정욱 사구 (타점)" },
+    { "inning": 3, "half": "top", "desc": "이정민 투땅병살" },
+    { "inning": 3, "half": "top", "desc": "강성언 좌안 (타점)(도루,득점)" },
+    { "inning": 3, "half": "top", "desc": "함동우 우선3 (타점) (득점)" },
+    { "inning": 3, "half": "top", "desc": "김문규 삼진" },
+    { "inning": 4, "half": "top", "desc": "황지회 좌선2 (도루,득점)" },
+    { "inning": 4, "half": "top", "desc": "대타 석지한 볼넷 (득점)" },
+    { "inning": 4, "half": "top", "desc": "문정욱 사구 (득점)" },
+    { "inning": 4, "half": "top", "desc": "이정민 유실 (타점) (도루,득점)" },
+    { "inning": 4, "half": "top", "desc": "강성언 유플" },
+    { "inning": 4, "half": "top", "desc": "함동우 유내안 (2타점)" },
+    { "inning": 4, "half": "top", "desc": "신진우 3플" }
+  ]
+}
+}
