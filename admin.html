@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>문자중계 컨트롤 타워 (Pro)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="background:#f0f0f0;">
+
+  <div id="loginLayer" class="admin-login-overlay">
+    <h2>⚾ TAURUS MANAGER</h2>
+    <input type="password" id="adminPw" placeholder="비밀번호 (taurus)" style="padding:12px; margin:10px; border-radius:8px; border:none; width:200px; text-align:center;">
+    <button id="loginBtn" style="padding:10px 30px; border-radius:8px; cursor:pointer; font-weight:bold;">ENTER</button>
+  </div>
+
+  <main id="adminPanel" class="admin-panel">
+    
+    <div id="setupSection" class="setup-box">
+      <h3>🛠️ 경기 설정 (Lineup)</h3>
+      <div style="margin:10px 0;">
+        <label><input type="radio" name="homeAway" value="away" checked> <b>타우루스 원정 (초)</b></label>
+        <label><input type="radio" name="homeAway" value="home" style="margin-left:15px;"> <b>타우루스 홈 (말)</b></label>
+      </div>
+      <div class="lineup-grid" id="lineupInputs"></div>
+      <div style="margin-top:10px;">
+         <input type="text" id="oppName" placeholder="상대팀 이름" style="width:100%; padding:10px;">
+      </div>
+      <button id="startGameBtn" class="send-btn" style="background:#333; margin-top:15px;">경기 시작</button>
+    </div>
+
+    <div id="gameSection" style="display:none;">
+      <div class="live-scoreboard" style="margin:0 0 10px 0; border-radius:12px; padding:10px;">
+        <div class="live-score-box">
+          <div class="live-team">AWAY<br><span id="dispAway" style="font-size:14px;"></span></div>
+          <div class="live-score"><span id="scAway">0</span>:<span id="scHome">0</span></div>
+          <div class="live-team">HOME<br><span id="dispHome" style="font-size:14px;"></span></div>
+        </div>
+        <div style="margin-top:5px;">
+           <button id="btnPrevInn">◀</button>
+           <span id="inningVal" style="margin:0 10px; font-weight:bold;">1회초</span>
+           <button id="btnNextInn">▶</button>
+        </div>
+      </div>
+
+      <div class="control-group" style="padding:10px;">
+        <div class="runner-control">
+           <div id="base3" class="base-plate bp-3" data-base="b3"><span>3루</span></div>
+           <div id="base2" class="base-plate bp-2" data-base="b2"><span>2루</span></div>
+           <div id="base1" class="base-plate bp-1" data-base="b1"><span>1루</span></div>
+           <div class="base-plate bp-h" style="border:none; background:none; color:#fff;"><span>Home</span></div>
+        </div>
+        <div style="text-align:center; display:flex; justify-content:space-around;">
+           <div>B <input type="number" id="cntB" value="0" style="width:30px;"></div>
+           <div>S <input type="number" id="cntS" value="0" style="width:30px;"></div>
+           <div>O <input type="number" id="cntO" value="0" style="width:30px;"></div>
+           <button id="resetCountBtn" style="padding:2px 8px;">리셋</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h4 id="currentBatterDisplay" style="text-align:center; color:var(--primary); margin:0 0 10px;">현재 타자: -</h4>
+        
+        <div class="action-pad" style="grid-template-columns: repeat(4, 1fr);">
+          <button class="act-btn act-hit" data-act="1b">1루타</button>
+          <button class="act-btn act-hit" data-act="2b">2루타</button>
+          <button class="act-btn act-hit" data-act="3b">3루타</button>
+          <button class="act-btn act-hit" data-act="hr">홈런</button>
+          
+          <button class="act-btn act-out" data-act="gnd_menu">땅볼/야선</button>
+          <button class="act-btn act-out" data-act="fly_menu">뜬공/직선</button>
+          <button class="act-btn act-out" data-act="k_menu">삼진</button>
+          <button class="act-btn act-out" data-act="sac_menu">희생타</button>
+
+          <button class="act-btn act-base" data-act="bb_menu">사사구</button>
+          <button class="act-btn act-adv" data-act="err_menu">실책</button>
+          <button class="act-btn act-adv" data-act="etc_menu">도루/폭투</button>
+          <button class="act-btn" style="background:#555; color:#fff;" data-act="inf_hit">내야안타</button>
+        </div>
+      </div>
+
+      <div class="box-score-wrap">
+         <h4>📊 타우루스 타석 기록</h4>
+         <table class="bs-table">
+            <thead><tr><th>타순</th><th>이름</th><th>타수</th><th>안타</th><th>타점</th><th>득점</th><th>사구</th><th>삼진</th></tr></thead>
+            <tbody id="lineupTableBody"></tbody>
+         </table>
+      </div>
+
+      <div class="control-group" style="margin-top:10px;">
+        <textarea id="comment" rows="2" class="control-input" placeholder="수동 중계 입력..."></textarea>
+        <button id="sendTextBtn" class="send-btn" style="margin-top:5px; padding:8px;">텍스트 전송</button>
+      </div>
+      <div style="margin-top:30px; text-align:center;">
+         <button id="resetGameBtn" style="background:#999; color:#fff; border:none; padding:8px; border-radius:4px; font-size:12px;">⚠️ 경기 초기화</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="actionModal" class="action-modal" style="display:none;">
+     <div class="am-content">
+        <h3 id="amTitle">상세 선택</h3>
+        <div id="amButtons" class="am-btn-group"></div>
+        <button id="closeModalBtn" style="margin-top:15px; width:100%; padding:10px;">닫기</button>
+     </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, set, push, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMVkogwvzoQon3lo0_hiVewfoXxmvbYMU",
+      authDomain: "taurus-cbnu.firebaseapp.com",
+      databaseURL: "https://taurus-cbnu-default-rtdb.firebaseio.com",
+      projectId: "taurus-cbnu",
+      storageBucket: "taurus-cbnu.firebasestorage.app",
+      messagingSenderId: "598393475132",
+      appId: "1:598393475132:web:b266ef01509e6c20dd7339"
+    };
+
+    let app, db;
+    try {
+        app = initializeApp(firebaseConfig);
+        db = getDatabase(app);
+    } catch (e) {
+        console.error("Firebase Init Error:", e);
+    }
+
+    let gameState = {
+        myTeam: 'away', oppName: '상대팀', inningStr: '1회초',
+        score: { away: 0, home: 0 },
+        bso: { b:0, s:0, o:0 },
+        runners: { b1: null, b2: null, b3: null },
+        lineup: [], currentBatterIdx: 0
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('lineupInputs');
+        if (grid) {
+            grid.innerHTML = '';
+            for(let i=0; i<9; i++) {
+                grid.innerHTML += `
+                    <div class="lineup-row">
+                        <span class="pos-badge">${i+1}번</span>
+                        <input type="text" id="pName${i}" class="lineup-name-input" placeholder="이름" style="width:100px; padding:6px;">
+                    </div>`;
+            }
+        }
+
+        bindEvent('loginBtn', 'click', handleLogin);
+        bindEvent('adminPw', 'keypress', (e) => { if(e.key==='Enter') handleLogin(); });
+        bindEvent('startGameBtn', 'click', startGame);
+        bindEvent('btnPrevInn', 'click', () => changeInning(-1));
+        bindEvent('btnNextInn', 'click', () => changeInning(1));
+        bindEvent('resetCountBtn', 'click', () => { resetCount(); syncAll(); renderBoard(); });
+        bindEvent('sendTextBtn', 'click', sendManualText);
+        bindEvent('resetGameBtn', 'click', resetGame);
+        bindEvent('closeModalBtn', 'click', closeModal);
+
+        document.querySelectorAll('.act-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => handleAction(e.target.dataset.act));
+        });
+
+        document.querySelectorAll('.base-plate').forEach(plate => {
+            plate.addEventListener('click', () => {
+                const base = plate.dataset.base;
+                if(!base) return;
+                if(gameState.runners[base]) {
+                    if(confirm("주자를 지우시겠습니까?")) {
+                        gameState.runners[base] = null;
+                        syncAll(); renderBoard();
+                    }
+                } else {
+                    const name = prompt("주자 이름 입력:");
+                    if(name) {
+                        gameState.runners[base] = name;
+                        syncAll(); renderBoard();
+                    }
+                }
+            });
+        });
+    });
+
+    function bindEvent(id, type, handler) {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener(type, handler);
+    }
+
+    function handleLogin() {
+        const pw = document.getElementById('adminPw').value;
+        if(pw === 'taurus') {
+            document.getElementById('loginLayer').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+        } else alert('비밀번호 오류');
+    }
+
+    function startGame() {
+        const homeAwayRadio = document.querySelector('input[name="homeAway"]:checked');
+        const isHome = homeAwayRadio ? (homeAwayRadio.value === 'home') : false;
+        gameState.myTeam = isHome ? 'home' : 'away';
+        gameState.oppName = document.getElementById('oppName').value || '상대팀';
+        
+        gameState.lineup = [];
+        for(let i=0; i<9; i++) {
+            const val = document.getElementById('pName' + i).value;
+            gameState.lineup.push({ 
+                name: val || `타자${i+1}`, 
+                ab:0, h:0, rbi:0, run:0, bb:0, k:0 
+            });
+        }
+        
+        document.getElementById('setupSection').style.display = 'none';
+        document.getElementById('gameSection').style.display = 'block';
+        syncAll(); renderBoard();
+    }
+
+    // === ★ 상세 메뉴 로직 (확장됨) ===
+    function handleAction(act) {
+        if(act.includes('_menu')) openModal(act);
+        else processPlay(act);
+    }
+
+    function openModal(menuType) {
+        const m = document.getElementById('actionModal');
+        const b = document.getElementById('amButtons');
+        const t = document.getElementById('amTitle');
+        b.innerHTML = ''; m.style.display = 'flex';
+        let btns = [];
+
+        if(menuType === 'gnd_menu') {
+            t.textContent = '땅볼 / 야수선택';
+            btns = [
+                {txt:'땅볼 아웃', code:'go'},
+                {txt:'야수선택 (타자 세이프)', code:'fc_safe'},
+                {txt:'병살타 (주자+타자 아웃)', code:'dp'}
+            ];
+        } else if (menuType === 'fly_menu') {
+            t.textContent = '뜬공 / 라인드라이브';
+            btns = [
+                {txt:'뜬공 아웃 (Fly)', code:'fo'},
+                {txt:'내야 뜬공 (Pop)', code:'po'},
+                {txt:'직선타 아웃 (Line)', code:'ld'},
+                {txt:'파울 플라이', code:'ff'}
+            ];
+        } else if (menuType === 'k_menu') {
+            t.textContent = '삼진';
+            btns = [
+                {txt:'헛스윙 삼진', code:'k_swing'},
+                {txt:'루킹 삼진', code:'k_look'},
+                {txt:'낫아웃 출루', code:'not_out'}
+            ];
+        } else if (menuType === 'sac_menu') {
+            t.textContent = '희생타 (타수 미포함)';
+            btns = [
+                {txt:'희생 번트', code:'sac_bunt'},
+                {txt:'희생 플라이', code:'sac_fly'}
+            ];
+        } else if (menuType === 'bb_menu') {
+            t.textContent = '사사구';
+            btns = [
+                {txt:'볼넷 (BB)', code:'bb'},
+                {txt:'몸에 맞는 공 (HBP)', code:'hbp'},
+                {txt:'고의사구 (IBB)', code:'ibb'}
+            ];
+        } else if (menuType === 'err_menu') {
+            t.textContent = '실책 (Error)';
+            btns = [
+                {txt:'포구/송구 실책 (타자 세이프)', code:'error_safe'},
+                {txt:'주자만 추가 진루', code:'error_adv'}
+            ];
+        } else if (menuType === 'etc_menu') {
+            t.textContent = '기타 상황';
+            btns = [
+                {txt:'도루 성공', code:'sb'},
+                {txt:'폭투 (Wild Pitch)', code:'wp'},
+                {txt:'포일 (Passed Ball)', code:'pb'}
+            ];
+        }
+
+        btns.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'am-btn';
+            btn.textContent = item.txt;
+            btn.onclick = () => { processPlay(item.code); closeModal(); };
+            b.appendChild(btn);
+        });
+    }
+
+    function closeModal() { document.getElementById('actionModal').style.display = 'none'; }
+
+    // === ★ 플레이 처리 (세분화됨) ===
+    function processPlay(code) {
+        const batter = gameState.lineup[gameState.currentBatterIdx];
+        let logText = `[${gameState.currentBatterIdx+1}번 ${batter.name}] : `;
+        
+        // 1. 타격 결과 (Hit)
+        if(['1b','2b','3b','hr','inf_hit'].includes(code)) {
+            batter.ab++; batter.h++;
+            if(code==='1b') { logText += '좌전 안타!'; advanceRunners(1); gameState.runners.b1 = batter.name; }
+            else if(code==='2b') { logText += '우중간 2루타!'; advanceRunners(2); gameState.runners.b2 = batter.name; }
+            else if(code==='3b') { logText += '3루타!!!'; advanceRunners(3); gameState.runners.b3 = batter.name; }
+            else if(code==='hr') { logText += '홈런~~~~!!!!'; batter.rbi++; batter.run++; advanceRunners(4); }
+            else if(code==='inf_hit') { logText += '내야 안타!'; advanceRunners(1); gameState.runners.b1 = batter.name; }
+        }
+        
+        // 2. 아웃 (Out)
+        else if(['go','fo','po','ld','ff','k_swing','k_look'].includes(code)) {
+            batter.ab++;
+            if(code.startsWith('k')) { batter.k++; logText += (code==='k_look'?'루킹 삼진':'헛스윙 삼진'); }
+            else if(code==='go') logText += '땅볼 아웃';
+            else if(code==='fo') logText += '중견수 뜬공 아웃';
+            else if(code==='po') logText += '내야 플라이 아웃';
+            else if(code==='ld') logText += '직선타 아웃';
+            else if(code==='ff') logText += '파울 플라이 아웃';
+            addOut();
+        }
+
+        // 3. 희생타 (Sacrifice) - 타수 안 오름
+        else if(code === 'sac_bunt') {
+            logText += '희생 번트 성공 (주자 진루)';
+            addOut(); 
+            // 번트는 보통 주자만 1루씩 보냄
+            pushRunnersForBunt(); 
+            if(gameState.runners.b1) gameState.runners.b1 = null; // 타자 아웃
+        }
+        else if(code === 'sac_fly') {
+            logText += '희생 플라이! (타점 추가)';
+            batter.rbi++; // 타점 추가 가정
+            addOut();
+            // 3루 주자 득점
+            if(gameState.runners.b3) { addScore(1); gameState.runners.b3 = null; }
+        }
+
+        // 4. 사사구 (Walk)
+        else if(['bb','hbp','ibb','not_out'].includes(code)) {
+            if(code!=='not_out') batter.bb++;
+            else { batter.k++; logText += '스트라이크 낫아웃 출루'; } // 낫아웃은 삼진 기록 + 출루
+
+            if(code==='bb') logText += '볼넷 걸어나갑니다.';
+            else if(code==='hbp') logText += '몸에 맞는 공.';
+            else if(code==='ibb') logText += '고의사구.';
+            
+            pushRunners(); // 밀어내기
+            gameState.runners.b1 = batter.name;
+        }
+
+        // 5. 특수 (Errors / FC)
+        else if(code === 'fc_safe') {
+            batter.ab++; logText += '야수 선택으로 출루 (선행주자 아웃)';
+            addOut();
+            if(gameState.runners.b1) gameState.runners.b1 = null; // 1루주자 죽었다고 가정
+            gameState.runners.b1 = batter.name;
+        }
+        else if(code === 'dp') {
+            batter.ab++; logText += '6-4-3 병살타!';
+            addOut(); addOut();
+            if(gameState.runners.b1) gameState.runners.b1 = null; 
+        }
+        else if(code === 'error_safe') {
+            batter.ab++; logText += '상대 실책으로 출루!';
+            pushRunners(); 
+            gameState.runners.b1 = batter.name;
+        }
+
+        // 6. 주자 플레이 (Batter change X)
+        else if(code === 'sb') {
+            logText = '도루 성공!';
+            alert("도루: 주자 위치를 클릭해서 수동으로 옮겨주세요.");
+        }
+        else if(code === 'wp' || code === 'pb') {
+            logText = (code==='wp'?'폭투':'포일') + '로 주자 진루';
+            alert("주자 위치를 클릭해서 수동으로 옮겨주세요.");
+        }
+        else if(code === 'error_adv') {
+            logText = '실책으로 주자 추가 진루';
+            alert("주자 위치를 수동으로 옮겨주세요.");
+        }
+
+        // 타자 교체 (주자 플레이 제외)
+        if(!['sb','wp','pb','error_adv'].includes(code)) {
+            nextBatter(); resetCount();
+        }
+
+        log(logText); syncAll(); renderBoard();
+    }
+
+    // --- 유틸 함수들 ---
+    function advanceRunners(bases) {
+        let r = gameState.runners; let scored = 0;
+        if(r.b3) { r.b3 = null; scored++; }
+        if(r.b2) { if(bases>=2) {r.b2=null; scored++;} else {r.b3=r.b2; r.b2=null;} }
+        if(r.b1) { if(bases>=3) {r.b1=null; scored++;} else if(bases===2) {r.b3=r.b1; r.b1=null;} else {r.b2=r.b1; r.b1=null;} }
+        if(scored>0) { addScore(scored); gameState.lineup[gameState.currentBatterIdx].rbi += scored; }
+    }
+    
+    function pushRunners() { // 밀어내기
+        let r = gameState.runners;
+        if(r.b1) {
+            if(r.b2) {
+                if(r.b3) { addScore(1); gameState.lineup[gameState.currentBatterIdx].rbi++; } 
+                else r.b3=r.b2;
+            } else r.b2=r.b1;
+        }
+    }
+
+    function pushRunnersForBunt() { // 번트 시 주자만 진루 (단순화)
+        let r = gameState.runners;
+        if(r.b2) { r.b3 = r.b2; r.b2 = null; }
+        if(r.b1) { r.b2 = r.b1; r.b1 = null; }
+    }
+
+    function addOut() {
+        gameState.bso.o++;
+        if(gameState.bso.o >= 3) {
+            alert("3아웃! 공수교대 하세요.");
+            gameState.bso.o = 0;
+            gameState.runners = {b1:null, b2:null, b3:null};
+        }
+    }
+
+    function addScore(n) {
+        if(gameState.myTeam === 'home') gameState.score.home += n;
+        else gameState.score.away += n;
+    }
+
+    function nextBatter() { gameState.currentBatterIdx = (gameState.currentBatterIdx + 1) % 9; }
+    function resetCount() { gameState.bso.b=0; gameState.bso.s=0; }
+    
+    function changeInning(delta) {
+        let s = gameState.inningStr; let num = parseInt(s); let isTop = s.includes('초');
+        if(delta > 0) { if(isTop) gameState.inningStr = `${num}회말`; else gameState.inningStr = `${num+1}회초`; } 
+        else { if(num===1 && isTop) return; if(!isTop) gameState.inningStr = `${num}회초`; else gameState.inningStr = `${num-1}회말`; }
+        syncAll(); renderBoard();
+    }
+
+    function sendManualText() {
+        const t = document.getElementById('comment').value;
+        if(t) { log(t); document.getElementById('comment').value=''; }
+    }
+    
+    function resetGame() {
+        if(confirm("정말 초기화?")) {
+            set(ref(db, 'status'), null); set(ref(db, 'logs'), null);
+            alert("초기화됨"); location.reload();
+        }
+    }
+
+    function syncAll() {
+        update(ref(db, 'status'), {
+            score: gameState.score, inning: gameState.inningStr, bso: gameState.bso, runners: gameState.runners,
+            teams: { home: (gameState.myTeam==='home'?'TAURUS':gameState.oppName), away: (gameState.myTeam==='away'?'TAURUS':gameState.oppName) },
+            currentBatterIdx: gameState.currentBatterIdx, lineup: gameState.lineup
+        });
+    }
+
+    function log(msg) {
+        const now = new Date();
+        push(ref(db, 'logs'), { text: msg, time: `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`, notice: false });
+    }
+
+    function renderBoard() {
+        const g = gameState;
+        document.getElementById('scAway').textContent = g.score.away;
+        document.getElementById('scHome').textContent = g.score.home;
+        document.getElementById('dispAway').textContent = (g.myTeam==='away'?'TAURUS':g.oppName);
+        document.getElementById('dispHome').textContent = (g.myTeam==='home'?'TAURUS':g.oppName);
+        document.getElementById('inningVal').textContent = g.inningStr;
+        
+        document.getElementById('cntB').value = g.bso.b;
+        document.getElementById('cntS').value = g.bso.s;
+        document.getElementById('cntO').value = g.bso.o;
+        
+        const setBase = (id, name) => {
+            const el = document.getElementById(id);
+            if(name) { el.classList.add('active'); el.title = name; }
+            else { el.classList.remove('active'); el.title = ''; }
+        };
+        setBase('base1', g.runners.b1);
+        setBase('base2', g.runners.b2);
+        setBase('base3', g.runners.b3);
+        
+        if(g.lineup[g.currentBatterIdx]) {
+            document.getElementById('currentBatterDisplay').textContent = 
+                `현재 타석: ${g.lineup[g.currentBatterIdx].name} (${g.currentBatterIdx+1}번)`;
+        }
+        
+        const tbody = document.getElementById('lineupTableBody');
+        tbody.innerHTML = '';
+        g.lineup.forEach((p, i) => {
+            const isCur = (i === g.currentBatterIdx);
+            tbody.innerHTML += `
+                <tr class="${isCur ? 'current-batter' : ''}" style="cursor:pointer;" onclick="window.changeBatter(${i})">
+                    <td>${i+1}</td>
+                    <td class="bs-name">${p.name}</td>
+                    <td>${p.ab}</td>
+                    <td style="color:red; font-weight:bold;">${p.h}</td>
+                    <td>${p.rbi}</td>
+                    <td>${p.run}</td>
+                    <td>${p.bb}</td>
+                    <td>${p.k}</td>
+                </tr>
+            `;
+        });
+    }
+
+    window.changeBatter = (idx) => {
+        if(confirm(`${idx+1}번 타자로 순서를 강제 변경하시겠습니까?`)) {
+            gameState.currentBatterIdx = idx; syncAll(); renderBoard();
+        }
+    };
+
+    onValue(ref(db, 'status'), (snap) => {
+        const d = snap.val();
+        if(d) {
+            gameState = { ...gameState, ...d };
+            if(d.inning) gameState.inningStr = d.inning;
+            renderBoard();
+            document.getElementById('setupSection').style.display = 'none';
+            document.getElementById('gameSection').style.display = 'block';
+        }
+    });
+  </script>
+</body>
+</html>
