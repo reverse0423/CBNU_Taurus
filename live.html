@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>TAURUS LIVE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 스코어보드 */
+    .scoreboard { background: #263238; color: #fff; padding: 20px; border-bottom: 4px solid var(--primary); }
+    .score-row { display: flex; justify-content: space-between; align-items: center; font-size: 28px; font-weight: bold; }
+    .team-name { font-size: 14px; color: #b0bec5; }
+    
+    /* 볼카운트 & 주자 */
+    .status-area { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; }
+    .bso-box { font-size: 20px; font-weight: bold; letter-spacing: 2px; }
+    
+    /* ★ 주자 시인성 대폭 강화 */
+    .field { position: relative; width: 80px; height: 80px; transform: rotate(45deg); border: 2px solid #546e7a; margin-right: 20px; }
+    .base { position: absolute; width: 14px; height: 14px; background: #37474f; border-radius: 50%; border: 1px solid #78909c; transition: 0.3s; }
+    .base.on { background: #ffeb3b; border: 2px solid #d50000; box-shadow: 0 0 10px #ffeb3b; transform: scale(1.3); z-index: 10; }
+    .b1 { top: 0; right: 0; margin: -7px -7px 0 0; }
+    .b2 { top: 0; left: 0; margin: -7px 0 0 -7px; }
+    .b3 { bottom: 0; left: 0; margin: 0 0 -7px -7px; }
+
+    /* 투수 정보창 */
+    .pitcher-info { text-align: center; margin-top: 15px; font-size: 13px; color: #cfd8dc; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 4px; }
+
+    /* 탭 메뉴 */
+    .tabs { display: flex; background: #fff; border-bottom: 1px solid #ddd; }
+    .tab { flex: 1; padding: 15px; text-align: center; font-weight: bold; color: #666; cursor: pointer; }
+    .tab.active { color: #1565c0; border-bottom: 3px solid #1565c0; background: #e3f2fd; }
+
+    /* 로그 영역 */
+    .logs { padding: 10px; height: 400px; overflow-y: auto; background: #f5f5f5; }
+    .log-item { background: #fff; padding: 10px; margin-bottom: 8px; border-radius: 8px; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .log-batter { font-weight: bold; color: #1565c0; margin-bottom: 4px; display: block; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+    .log-pitch { color: #555; }
+    .log-result { color: #d32f2f; font-weight: bold; }
+
+    /* 상세 기록표 */
+    .table-wrap { overflow-x: auto; padding: 10px; background: #fff; }
+    .stats-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; white-space: nowrap; }
+    .stats-table th { background: #eee; padding: 8px; border-bottom: 2px solid #ccc; }
+    .stats-table td { padding: 8px; border-bottom: 1px solid #eee; }
+    .cur-row { background: #e3f2fd; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="scoreboard">
+    <div class="score-row">
+      <span id="sc_away">0</span>
+      <span style="font-size:16px; background:#37474f; padding:3px 10px; border-radius:15px;" id="inn">1회초</span>
+      <span id="sc_home">0</span>
+    </div>
+    <div class="score-row" style="margin-top:5px;">
+      <span class="team-name" id="tn_away">AWAY</span>
+      <span class="team-name" id="tn_home">HOME</span>
+    </div>
+    
+    <div class="status-area">
+      <div class="bso-box">
+        <div style="color:#4caf50">B <span id="cnt_b">0</span></div>
+        <div style="color:#ffeb3b">S <span id="cnt_s">0</span></div>
+        <div style="color:#f44336">O <span id="cnt_o">0</span></div>
+      </div>
+      <div class="field">
+        <div id="b2" class="base b2"></div>
+        <div id="b3" class="base b3"></div>
+        <div id="b1" class="base b1"></div>
+      </div>
+    </div>
+    
+    <div class="pitcher-info">
+      마운드: <span id="live_pit" style="color:#fff; font-weight:bold;">-</span> 
+      (투구수 <span id="live_pc">0</span> / 삼진 <span id="live_k">0</span>)
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="swTab('log')">문자중계</div>
+    <div class="tab" onclick="swTab('stat')">타자 기록</div>
+    <div class="tab" onclick="swTab('pit')">투수 기록</div>
+  </div>
+
+  <div id="tab_log" class="logs"></div>
+  
+  <div id="tab_stat" style="display:none; background:#fff;">
+    <div class="table-wrap">
+      <h4 style="margin:5px 0;">타우루스 타자</h4>
+      <table class="stats-table">
+        <thead><tr><th>순</th><th>이름</th><th>타수</th><th>안타</th><th>타점</th><th>4사</th><th>삼진</th></tr></thead>
+        <tbody id="batBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab_pit" style="display:none; background:#fff;">
+    <div class="table-wrap">
+      <h4 style="margin:5px 0;">투수 정보</h4>
+      <table class="stats-table">
+        <thead><tr><th>이름</th><th>투구수</th><th>스트</th><th>볼</th><th>삼진</th></tr></thead>
+        <tbody id="pitBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, onValue, onChildAdded } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMVkogwvzoQon3lo0_hiVewfoXxmvbYMU",
+      authDomain: "taurus-cbnu.firebaseapp.com",
+      databaseURL: "https://taurus-cbnu-default-rtdb.firebaseio.com",
+      projectId: "taurus-cbnu",
+      storageBucket: "taurus-cbnu.firebasestorage.app",
+      messagingSenderId: "598393475132",
+      appId: "1:598393475132:web:b266ef01509e6c20dd7339"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.swTab = (t) => {
+       document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+       event.target.classList.add('active');
+       document.getElementById('tab_log').style.display = t==='log'?'block':'none';
+       document.getElementById('tab_stat').style.display = t==='stat'?'block':'none';
+       document.getElementById('tab_pit').style.display = t==='pit'?'block':'none';
+    };
+
+    onValue(ref(db, 'status'), (snap) => {
+       const d = snap.val(); if(!d) return;
+       
+       // 점수판
+       document.getElementById('sc_away').textContent = d.score.away;
+       document.getElementById('sc_home').textContent = d.score.home;
+       document.getElementById('tn_away').textContent = d.teams.away;
+       document.getElementById('tn_home').textContent = d.teams.home;
+       document.getElementById('inn').textContent = d.inn;
+       
+       document.getElementById('cnt_b').textContent = d.bso.b;
+       document.getElementById('cnt_s').textContent = d.bso.s;
+       document.getElementById('cnt_o').textContent = d.bso.o;
+       
+       // 주자 (노란색으로 확실하게)
+       const setB = (id,on) => { document.getElementById(id).className = 'base '+id+(on?' on':''); };
+       setB('b1', d.runner.b1); setB('b2', d.runner.b2); setB('b3', d.runner.b3);
+       
+       // 투수 정보
+       const def = d.top?'home':'away';
+       const p = d.pitchers[def];
+       document.getElementById('live_pit').textContent = p.name;
+       document.getElementById('live_pc').textContent = p.total;
+       document.getElementById('live_k').textContent = p.k;
+       
+       // ★ 타자 상세 기록
+       if(d.lineups) {
+          const tbody = document.getElementById('batBody'); tbody.innerHTML='';
+          const team = d.teams.home==='TAURUS'?'home':'away';
+          const curSide = d.top?'away':'home';
+          
+          d.lineups[team].forEach((b, i) => {
+             const isCur = (curSide===team && d.idx[team]===i);
+             tbody.innerHTML += `
+               <tr class="${isCur?'cur-row':''}">
+                 <td>${i+1}</td><td>${b.name}</td><td>${b.ab}</td>
+                 <td style="color:red;font-weight:bold">${b.h}</td>
+                 <td>${b.rbi}</td><td>${b.bb}</td><td>${b.k}</td>
+               </tr>`;
+          });
+          
+          // ★ 투수 상세 기록 (양팀 다 보여줌)
+          const pbody = document.getElementById('pitBody'); pbody.innerHTML='';
+          ['away','home'].forEach(s => {
+             const pit = d.pitchers[s];
+             pbody.innerHTML += `<tr><td>${pit.name}(${s==='home'?'홈':'원'})</td><td>${pit.total}</td><td>${pit.s}</td><td>${pit.b}</td><td>${pit.k}</td></tr>`;
+          });
+       }
+    });
+
+    const logBox = document.getElementById('tab_log');
+    onChildAdded(ref(db, 'logs'), (snap) => {
+       const d = snap.val();
+       const div = document.createElement('div');
+       div.className = 'log-item';
+       
+       // 로그 스타일링 (타자 등장 / 투구 / 결과 구분)
+       if(d.text.includes('[')) {
+          // 타자 등장 (굵게)
+          div.innerHTML = `<span class="log-batter">${d.text}</span>`;
+          div.style.background = "#e3f2fd";
+       } else if(d.text.includes('구')) {
+          // 투구 (일반)
+          div.innerHTML = `<span class="log-pitch">${d.text}</span>`;
+       } else if(d.text.includes('▶')) {
+          // 결과 (빨강)
+          div.innerHTML = `<span class="log-result">${d.text}</span>`;
+       } else {
+          div.textContent = d.text;
+       }
+       logBox.prepend(div);
+    });
+  </script>
+</body>
+</html>
