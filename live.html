@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TAURUS LIVE</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 실시간 상황판 (Live Dashboard) */
+    .live-dashboard { background: #222; color: #fff; padding: 15px; margin-bottom: 10px; border-radius: 0 0 15px 15px; }
+    .ld-score { font-size: 24px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .ld-inn { font-size: 14px; background: #444; padding: 2px 8px; border-radius: 4px; }
+    .ld-bso { font-size: 18px; font-weight: bold; letter-spacing: 2px; margin-bottom: 10px; text-align: center; }
+    .ld-bso span { margin: 0 5px; }
+    
+    .ld-batter { background: #333; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center; }
+    .ld-batter-name { font-size: 18px; font-weight: bold; color: #ffeb3b; }
+    .ld-pitch-history { font-size: 13px; color: #aaa; margin-top: 5px; min-height: 20px; }
+    
+    .base-field { position: relative; height: 100px; width: 150px; margin: 0 auto; }
+    .base { width: 25px; height: 25px; background: #fff; position: absolute; transform: rotate(45deg); border-radius: 3px; transition: 0.3s; }
+    .base.on { background: #ffd700; box-shadow: 0 0 10px #ffd700; }
+    .b1 { right: 0; top: 50%; margin-top: -12px; }
+    .b2 { left: 50%; top: 0; margin-left: -12px; }
+    .b3 { left: 0; top: 50%; margin-top: -12px; }
+    
+    .log-list { padding: 10px; }
+    .log-item { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 14px; }
+    .log-item.notice { border-left-color: #2196f3; background: #e3f2fd; }
+    .log-time { font-size: 11px; color: #888; margin-bottom: 2px; }
+  </style>
+</head>
+<body style="background:#f5f5f5;">
+
+  <div class="live-dashboard">
+    <div class="ld-score">
+      <span id="scoreAway">0</span>
+      <span class="ld-inn" id="innDisplay">-</span>
+      <span id="scoreHome">0</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:12px; color:#ccc; margin-bottom:5px;">
+      <span id="teamAway">-</span>
+      <span id="teamHome">-</span>
+    </div>
+    
+    <div class="base-field">
+      <div id="b2" class="base b2"></div>
+      <div id="b3" class="base b3"></div>
+      <div id="b1" class="base b1"></div>
+    </div>
+    
+    <div class="ld-bso">
+      <span style="color:green">B <span id="cntB">0</span></span>
+      <span style="color:#fbc02d">S <span id="cntS">0</span></span>
+      <span style="color:red">O <span id="cntO">0</span></span>
+    </div>
+
+    <div class="ld-batter">
+      <div id="batterName" class="ld-batter-name">대기 중...</div>
+      <div id="pitchHistory" class="ld-pitch-history">-</div>
+    </div>
+  </div>
+
+  <div style="padding:0 15px; font-weight:bold; color:#555;">📋 경기 기록 (Log)</div>
+  <div id="logList" class="log-list"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, onValue, onChildAdded } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMVkogwvzoQon3lo0_hiVewfoXxmvbYMU",
+      authDomain: "taurus-cbnu.firebaseapp.com",
+      databaseURL: "https://taurus-cbnu-default-rtdb.firebaseio.com",
+      projectId: "taurus-cbnu",
+      storageBucket: "taurus-cbnu.firebasestorage.app",
+      messagingSenderId: "598393475132",
+      appId: "1:598393475132:web:b266ef01509e6c20dd7339"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // 1. 실시간 상태 동기화 (전광판)
+    onValue(ref(db, 'status'), (snap) => {
+        const d = snap.val();
+        if(!d) return;
+
+        document.getElementById('scoreAway').textContent = d.score.away;
+        document.getElementById('scoreHome').textContent = d.score.home;
+        document.getElementById('teamAway').textContent = d.teams.away;
+        document.getElementById('teamHome').textContent = d.teams.home;
+        document.getElementById('innDisplay').textContent = d.inningStr;
+        
+        document.getElementById('cntB').textContent = d.bso.b;
+        document.getElementById('cntS').textContent = d.bso.s;
+        document.getElementById('cntO').textContent = d.bso.o;
+
+        // 베이스 표시
+        const setBase = (id, name) => {
+            const el = document.getElementById(id);
+            if(d.runners && d.runners[id]) { el.classList.add('on'); } else { el.classList.remove('on'); }
+        };
+        setBase('b1'); setBase('b2'); setBase('b3');
+
+        // 현재 타자 & 투구 내용
+        if(d.lineups) {
+            const side = d.isTop ? 'away' : 'home';
+            const batter = d.lineups[side][d.batIdx[side]];
+            document.getElementById('batterName').textContent = `${d.batIdx[side]+1}번 ${batter.name}`;
+            
+            if(d.currentPitchLog && d.currentPitchLog.length > 0) {
+                document.getElementById('pitchHistory').textContent = d.currentPitchLog.join(' - ');
+            } else {
+                document.getElementById('pitchHistory').textContent = "초구 대기";
+            }
+        }
+    });
+
+    // 2. 로그 추가 (완료된 결과만)
+    const logBox = document.getElementById('logList');
+    onChildAdded(ref(db, 'logs'), (snap) => {
+        const d = snap.val();
+        const div = document.createElement('div');
+        div.className = 'log-item';
+        // 이닝 교체 알림 등은 스타일 다르게
+        if(d.text.includes('===') || d.text.includes('3아웃')) {
+            div.classList.add('notice');
+            div.style.textAlign = 'center';
+            div.innerHTML = `<b>${d.text}</b>`;
+        } else {
+            div.innerHTML = `<div class="log-time">${d.time}</div><div>${d.text}</div>`;
+        }
+        logBox.prepend(div);
+    });
+  </script>
+</body>
+</html>
