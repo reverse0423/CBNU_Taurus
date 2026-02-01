@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>TAURUS LIVE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 기본 테마 */
+    body { background-color: #121212; color: #fff; margin: 0; font-family: 'Pretendard', sans-serif; }
+
+    /* 상단 스코어보드 */
+    .scoreboard { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    .score-row { display: flex; justify-content: space-between; align-items: center; }
+    .score-num { font-size: 32px; font-weight: 800; font-family: 'Impact', sans-serif; }
+    .inn-badge { background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); }
+    .teams { font-size: 14px; color: rgba(255,255,255,0.8); display: flex; justify-content: space-between; margin-top: 5px; font-weight: bold; letter-spacing: 1px; }
+
+    /* BSO & Field */
+    .status-area { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+    .bso-line { display: flex; align-items: center; margin-bottom: 8px; font-size: 18px; font-weight: bold; }
+    .bso-label { width: 20px; text-align: center; margin-right: 8px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: #444; margin-right: 4px; display: inline-block; }
+    .dot.active.b { background: #00e676; box-shadow: 0 0 5px #00e676; }
+    .dot.active.s { background: #ffea00; box-shadow: 0 0 5px #ffea00; }
+    .dot.active.o { background: #ff1744; box-shadow: 0 0 5px #ff1744; }
+
+    .field { position: relative; width: 70px; height: 70px; transform: rotate(45deg); border: 2px solid #546e7a; margin-right: 10px; background: rgba(255,255,255,0.05); }
+    .base { position: absolute; width: 14px; height: 14px; background: #37474f; border-radius: 2px; }
+    .base.on { background: #ffeb3b; box-shadow: 0 0 10px #ffeb3b; border: 2px solid #d50000; transform: scale(1.2); z-index: 2; }
+    .b1 { top: 0; right: 0; margin: -7px -7px 0 0; }
+    .b2 { top: 0; left: 0; margin: -7px 0 0 -7px; }
+    .b3 { bottom: 0; left: 0; margin: 0 0 -7px -7px; }
+
+    /* ★ 현재 타자 카드 (시인성 UP) */
+    .current-batter-card { background: rgba(0,0,0,0.3); border-radius: 12px; margin-top: 20px; padding: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+    .cur-role { font-size: 12px; color: #aaa; margin-bottom: 5px; }
+    .cur-name { font-size: 28px; font-weight: 800; color: #ffeb3b; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .cur-stat { font-size: 14px; margin-top: 5px; color: #fff; background: rgba(255,255,255,0.15); display: inline-block; padding: 4px 10px; border-radius: 15px; }
+
+    /* 알림판 */
+    #lastPlayBadge { margin-top: 10px; text-align: center; font-weight: bold; color: #fff; height: 20px; text-shadow: 0 0 5px #fff; }
+
+    /* 탭 */
+    .tabs { display: flex; background: #1e1e1e; border-bottom: 1px solid #333; margin-top: 0; }
+    .tab { flex: 1; padding: 15px; text-align: center; font-weight: bold; color: #888; cursor: pointer; transition: 0.3s; }
+    .tab.active { color: #fff; border-bottom: 3px solid #2196f3; background: #252525; }
+
+    /* 로그 (카드형) */
+    .logs { padding: 10px; height: 400px; overflow-y: auto; background: #f0f2f5; color: #333; }
+    
+    .at-bat-card { background: #fff; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #e0e0e0; }
+    .card-header { background: #1a237e; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; color: #fff; }
+    .card-batter { font-size: 16px; font-weight: bold; color: #ffeb3b; }
+    .card-time { font-size: 11px; opacity: 0.7; }
+    .card-body { padding: 12px 15px; }
+    
+    .log-line { margin-bottom: 8px; font-size: 14px; display: flex; align-items: center; border-bottom: 1px solid #f5f5f5; padding-bottom: 4px; }
+    .log-line:last-child { border-bottom: none; margin-bottom: 0; }
+    .log-res-line { color: #d32f2f; font-weight: bold; font-size: 15px; margin-top: 5px; background: #ffebee; padding: 8px; border-radius: 6px; }
+    .sys-msg { text-align: center; font-size: 12px; color: #666; margin: 15px 0; background: #e0e0e0; padding: 5px; border-radius: 20px; display: block; width: fit-content; margin-left: auto; margin-right: auto; }
+
+    /* 테이블 */
+    .table-wrap { padding: 10px; background: #fff; color: #000; min-height: 400px; }
+    .stats-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; white-space: nowrap; }
+    .stats-table th { background: #eee; padding: 10px; border-bottom: 2px solid #ccc; font-weight: bold; }
+    .stats-table td { padding: 10px; border-bottom: 1px solid #eee; }
+    .cur-row { background: #e3f2fd; font-weight: bold; border-left: 4px solid #2196f3; }
+  </style>
+</head>
+<body>
+
+  <div class="scoreboard">
+    <div class="score-row">
+      <span class="score-num" id="sc_away">0</span>
+      <span class="inn-badge" id="inn">1회초</span>
+      <span class="score-num" id="sc_home">0</span>
+    </div>
+    <div class="teams">
+      <span id="tn_away">AWAY</span>
+      <span id="tn_home">HOME</span>
+    </div>
+    
+    <div class="status-area">
+      <div style="flex:1;">
+        <div class="bso-line"><span class="bso-label" style="color:#00e676">B</span> <span id="dots_b"></span></div>
+        <div class="bso-line"><span class="bso-label" style="color:#ffea00">S</span> <span id="dots_s"></span></div>
+        <div class="bso-line"><span class="bso-label" style="color:#ff1744">O</span> <span id="dots_o"></span></div>
+      </div>
+      <div class="field">
+        <div id="base2" class="base b2"></div>
+        <div id="base3" class="base b3"></div>
+        <div id="base1" class="base b1"></div>
+      </div>
+    </div>
+
+    <div class="current-batter-card">
+      <div class="cur-role">CURRENT BATTER</div>
+      <div class="cur-name" id="cur_name">대기 중</div>
+      <div class="cur-stat" id="cur_stat">-</div>
+    </div>
+    
+    <div id="lastPlayBadge"></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="swTab('log')">중계</div>
+    <div class="tab" onclick="swTab('stat')">타자</div>
+    <div class="tab" onclick="swTab('pit')">투수</div>
+  </div>
+
+  <div id="tab_log" class="logs"></div>
+  
+  <div id="tab_stat" style="display:none; background:#fff;">
+    <div class="table-wrap">
+      <h4 style="margin:5px 0;">타우루스 타자 기록</h4>
+      <table class="stats-table">
+        <thead><tr><th>순</th><th>이름</th><th>타수</th><th>안타</th><th>타점</th><th>4사</th><th>삼진</th></tr></thead>
+        <tbody id="batBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab_pit" style="display:none; background:#fff;">
+    <div class="table-wrap">
+      <h4 style="margin:5px 0;">투수 기록</h4>
+      <table class="stats-table">
+        <thead><tr><th>이름</th><th>투구수</th><th>스트</th><th>볼</th><th>삼진</th></tr></thead>
+        <tbody id="pitBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, onValue, onChildAdded } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMVkogwvzoQon3lo0_hiVewfoXxmvbYMU",
+      authDomain: "taurus-cbnu.firebaseapp.com",
+      databaseURL: "https://taurus-cbnu-default-rtdb.firebaseio.com",
+      projectId: "taurus-cbnu",
+      storageBucket: "taurus-cbnu.firebasestorage.app",
+      messagingSenderId: "598393475132",
+      appId: "1:598393475132:web:b266ef01509e6c20dd7339"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.swTab = (t) => {
+       document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+       event.target.classList.add('active');
+       document.getElementById('tab_log').style.display = t==='log'?'block':'none';
+       document.getElementById('tab_stat').style.display = t==='stat'?'block':'none';
+       document.getElementById('tab_pit').style.display = t==='pit'?'block':'none';
+    };
+
+    // BSO 도트 그리기
+    const drawDots = (id, count, max) => {
+        let html = '';
+        for(let i=0; i<max; i++) html += `<span class="dot ${id.split('_')[1]} ${i<count?'active':''}"></span>`;
+        document.getElementById(id).innerHTML = html;
+    };
+
+    onValue(ref(db, 'status'), (snap) => {
+       const d = snap.val(); if(!d) return;
+       
+       document.getElementById('sc_away').textContent = d.score.away;
+       document.getElementById('sc_home').textContent = d.score.home;
+       document.getElementById('tn_away').textContent = d.teams.away;
+       document.getElementById('tn_home').textContent = d.teams.home;
+       document.getElementById('inn').textContent = d.inn;
+       
+       drawDots('dots_b', d.bso.b, 3);
+       drawDots('dots_s', d.bso.s, 2);
+       drawDots('dots_o', d.bso.o, 2);
+       
+       const setB = (id,on) => { document.getElementById(id).className = 'base '+id+(on?' on':''); };
+       setB('b1', d.runner.b1); setB('b2', d.runner.b2); setB('b3', d.runner.b3);
+       
+       // 마지막 플레이 알림
+       if(d.lastPlay) {
+           const lp = document.getElementById('lastPlayBadge');
+           lp.textContent = d.lastPlay;
+           lp.style.color = "#ffeb3b";
+           setTimeout(()=>lp.style.color="#fff", 500);
+       }
+
+       // 현재 타자 카드 업데이트
+       if(d.lineups) {
+          const atk = d.top ? 'away' : 'home';
+          const bat = d.lineups[atk][d.idx[atk]];
+          document.getElementById('cur_name').textContent = bat.name;
+          document.getElementById('cur_stat').textContent = `타율 ${bat.avg||'-'}  OPS ${bat.ops||'-'}`;
+
+          // 상세 테이블
+          const tbody = document.getElementById('batBody'); tbody.innerHTML='';
+          const team = d.teams.home==='TAURUS'?'home':'away';
+          
+          d.lineups[team].forEach((b, i) => {
+             const isCur = (atk===team && d.idx[team]===i);
+             tbody.innerHTML += `<tr class="${isCur?'cur-row':''}"><td>${i+1}</td><td>${b.name}</td><td>${b.ab}</td><td style="color:#d32f2f;font-weight:bold">${b.h}</td><td>${b.rbi}</td><td>${b.bb}</td><td>${b.k}</td></tr>`;
+          });
+          
+          const pbody = document.getElementById('pitBody'); pbody.innerHTML='';
+          ['away','home'].forEach(s => {
+             const pit = d.pitchers[s];
+             pbody.innerHTML += `<tr><td>${pit.name}(${s==='home'?'홈':'원'})</td><td>${pit.total}</td><td>${pit.s}</td><td>${pit.b}</td><td>${pit.k}</td></tr>`;
+          });
+       }
+    });
+
+    const logBox = document.getElementById('tab_log');
+    let lastBatter = null;
+    let curBody = null;
+
+    onChildAdded(ref(db, 'logs'), (snap) => {
+       const d = snap.val();
+       const batterName = d.batter || 'System';
+       
+       if(d.text.includes('===')) {
+           const sys = document.createElement('div'); sys.className='sys-msg'; sys.textContent=d.text;
+           logBox.prepend(sys); lastBatter=null; return;
+       }
+
+       if(batterName !== lastBatter || !curBody) {
+           const card = document.createElement('div'); card.className = 'at-bat-card';
+           card.innerHTML = `<div class="card-header"><span class="card-batter">${batterName}</span><span class="card-time">${d.time}</span></div><div class="card-body"></div>`;
+           logBox.prepend(card);
+           curBody = card.querySelector('.card-body');
+           lastBatter = batterName;
+       }
+
+       const line = document.createElement('div');
+       if(d.text.includes('▶')) {
+           line.className = 'log-res-line';
+           line.textContent = d.text.split('▶')[1]; // 결과만 강조
+       } else {
+           line.className = 'log-line';
+           line.innerHTML = `<span>${d.text}</span>`;
+       }
+       curBody.appendChild(line);
+    });
+  </script>
+</body>
+</html>
