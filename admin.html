@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>문자중계 컨트롤 타워</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="admin.js"></script>
+</head>
+<body style="background:#f0f0f0;">
+
+  <div id="loginLayer" class="admin-login-overlay">
+    <h2>⚾ TAURUS 관리자</h2>
+    <input type="password" id="adminPw" placeholder="비밀번호 (taurus)" style="padding:12px; margin:10px; border-radius:8px; border:none; width:200px; text-align:center;">
+    <button id="loginBtn" style="padding:10px 30px; border-radius:8px; cursor:pointer; font-weight:bold;">ENTER</button>
+  </div>
+
+  <main id="adminPanel" class="admin-panel">
+    
+    <div id="setupSection" class="setup-box">
+      <h3>🛠️ 경기 설정 (Lineup)</h3>
+      <p style="font-size:13px; color:#666; margin-bottom:10px;">
+        * 타우루스의 공격 순서(선공/후공)와 선발 라인업을 적어주세요.<br>
+        * 상대팀 라인업은 기록하지 않습니다.
+      </p>
+      <div style="margin:10px 0;">
+        <label><input type="radio" name="homeAway" value="away" checked> <b>타우루스 원정 (초 공격)</b></label>
+        <label><input type="radio" name="homeAway" value="home" style="margin-left:15px;"> <b>타우루스 홈 (말 공격)</b></label>
+      </div>
+      <div class="lineup-grid" id="lineupInputs">
+        </div>
+      <div style="margin-top:10px;">
+         <input type="text" id="oppName" placeholder="상대팀 이름 입력" style="width:100%; padding:10px;">
+      </div>
+      <button id="startGameBtn" class="send-btn" style="background:#333; margin-top:15px;">경기 시작</button>
+    </div>
+
+    <div id="gameSection" style="display:none;">
+      <div class="live-scoreboard" style="margin:0 0 10px 0; border-radius:12px; padding:10px;">
+        <div class="live-score-box">
+          <div class="live-team">AWAY<br><span id="dispAway" style="font-size:14px;"></span></div>
+          <div class="live-score"><span id="scAway">0</span>:<span id="scHome">0</span></div>
+          <div class="live-team">HOME<br><span id="dispHome" style="font-size:14px;"></span></div>
+        </div>
+        <div style="margin-top:5px;">
+           <button id="btnPrevInn">◀</button>
+           <span id="inningVal" style="margin:0 10px; font-weight:bold;">1회초</span>
+           <button id="btnNextInn">▶</button>
+        </div>
+      </div>
+
+      <div class="control-group" style="padding:10px;">
+        <div class="runner-control">
+           <div id="base3" class="base-plate bp-3" data-base="b3"><span>3루</span></div>
+           <div id="base2" class="base-plate bp-2" data-base="b2"><span>2루</span></div>
+           <div id="base1" class="base-plate bp-1" data-base="b1"><span>1루</span></div>
+           <div class="base-plate bp-h" style="border:none; background:none; color:#fff;"><span>Home</span></div>
+        </div>
+        <div style="text-align:center; display:flex; justify-content:space-around;">
+           <div>B <input type="number" id="cntB" value="0" style="width:30px;"></div>
+           <div>S <input type="number" id="cntS" value="0" style="width:30px;"></div>
+           <div>O <input type="number" id="cntO" value="0" style="width:30px;"></div>
+           <button id="resetCountBtn" style="padding:2px 8px;">리셋</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h4 id="currentBatterDisplay" style="text-align:center; color:var(--primary); margin:0 0 10px;">현재 타자: -</h4>
+        <div class="action-pad">
+          <button class="act-btn act-hit" data-act="hit_menu">안타</button>
+          <button class="act-btn act-hit" data-act="2b">2루타</button>
+          <button class="act-btn act-hit" data-act="3b">3루타</button>
+          <button class="act-btn act-hit" data-act="hr">홈런</button>
+          
+          <button class="act-btn act-out" data-act="go">땅볼</button>
+          <button class="act-btn act-out" data-act="fo">뜬공</button>
+          <button class="act-btn act-out" data-act="k">삼진</button>
+          <button class="act-btn act-out" data-act="fc_menu">야수선택</button>
+
+          <button class="act-btn act-base" data-act="bb">볼넷</button>
+          <button class="act-btn act-base" data-act="hbp">사구</button>
+          <button class="act-btn act-adv" data-act="err_menu">실책</button>
+          <button class="act-btn act-adv" data-act="etc_menu">기타</button>
+        </div>
+      </div>
+
+      <div class="box-score-wrap">
+         <h4>📊 타우루스 타석 기록 (이름 클릭시 타자 변경)</h4>
+         <table class="bs-table">
+            <thead><tr><th>타순</th><th>이름</th><th>타수</th><th>안타</th><th>타점</th><th>득점</th><th>사구</th><th>삼진</th></tr></thead>
+            <tbody id="lineupTableBody"></tbody>
+         </table>
+      </div>
+
+      <div class="control-group" style="margin-top:10px;">
+        <textarea id="comment" rows="2" class="control-input" placeholder="수동 중계 입력..."></textarea>
+        <button id="sendTextBtn" class="send-btn" style="margin-top:5px; padding:8px;">텍스트 전송</button>
+      </div>
+      
+      <div style="margin-top:30px; text-align:center;">
+         <button id="resetGameBtn" style="background:#999; color:#fff; border:none; padding:8px; border-radius:4px; font-size:12px;">⚠️ 경기 초기화</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="actionModal" class="action-modal" style="display:none;">
+     <div class="am-content">
+        <h3 id="amTitle">상세 선택</h3>
+        <div id="amButtons" class="am-btn-group"></div>
+        <button id="closeModalBtn" style="margin-top:15px; width:100%; padding:10px;">닫기</button>
+     </div>
+  </div>
+
+</body>
+</html>

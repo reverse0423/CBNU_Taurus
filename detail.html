@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>상세기록 | CBNU Taurus</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top-nav">
+    <button class="back-btn" onclick="history.back()">◀</button>
+    <h1 id="title">상세기록</h1>
+    <button class="action-btn" id="shareBtn">🔗</button>
+  </header>
+  
+  <main style="padding:12px 12px 24px;">
+    <div class="meta" style="padding: 0 12px 4px; color: var(--muted); font-size: 14px;">
+      <span id="date"></span> • <span id="venue"></span> • <span id="status"></span>
+    </div>
+
+    <section class="card"><h2>스코어보드</h2><div class="table-wrap" id="scoreboard"></div></section>
+    <section class="card"><h2>홈 팀 타자</h2><div class="table-wrap" id="batting-home"></div></section>
+    <section class="card"><h2>원정 팀 타자</h2><div class="table-wrap" id="batting-away"></div></section>
+    <section class="card"><h2>홈 팀 투수</h2><div class="table-wrap" id="pitching-home"></div></section>
+    <section class="card"><h2>원정 팀 투수</h2><div class="table-wrap" id="pitching-away"></div></section>
+    <section class="card"><h2>플레이 로그</h2><div class="table-wrap" id="plays"></div></section>
+  </main>
+
+  <script src="detail.js"></script>
+</body>
+</html>

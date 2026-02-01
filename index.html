@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>타우루스 야구단</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="main-header">
+    <img src="logo.png" alt="TAURUS" class="team-logo" onerror="this.style.display='none'"> 
+    <h1 class="team-name">TAURUS</h1>
+    <p class="team-desc">Official Record System</p>
+  </header>
+
+  <main class="container">
+    
+    <div class="menu-grid">
+      <a href="schedule.html" class="menu-item">
+        <span class="menu-icon">📅</span>
+        <span class="menu-text">경기 일정</span>
+        <span class="menu-sub">Schedule</span>
+      </a>
+      <a href="records.html" class="menu-item">
+        <span class="menu-icon">📊</span>
+        <span class="menu-text">기록실</span>
+        <span class="menu-sub">Records</span>
+      </a>
+      <a href="players.html" class="menu-item">
+        <span class="menu-icon">👥</span>
+        <span class="menu-text">선수단</span>
+        <span class="menu-sub">Players</span>
+      </a>
+      <a href="live.html" class="menu-item live-on">
+        <span class="menu-icon">📡</span>
+        <span class="menu-text">실시간 중계</span>
+        <span class="menu-sub">ON AIR</span>
+      </a>
+    </div>
+
+    <div class="admin-link-area">
+      <a href="admin.html" class="admin-entry-btn">
+        🛠️ 중계 입력 (관리자 모드)
+      </a>
+    </div>
+
+    <div class="section-title">🔥 최근 경기</div>
+    <div id="recent-match" class="highlight-card">
+      <p style="text-align:center; color:#999; font-size:14px; padding:20px;">경기 데이터를 불러오는 중...</p>
+    </div>
+  </main>
+  
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="location.href='index.html'">메인</button>
+    <button class="nav-btn" onclick="location.href='schedule.html'">일정</button>
+    <button class="nav-btn" onclick="location.href='records.html'">기록</button>
+    <button class="nav-btn" onclick="location.href='players.html'">선수</button>
+  </nav>
+
+  <script src="main.js"></script>
+</body>
+</html>
