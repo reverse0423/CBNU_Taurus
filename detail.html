@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>경기 상세 기록</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Live와 동일한 스타일 */
+    body { background-color: #121212; color: #fff; margin: 0; font-family: 'Pretendard', sans-serif; }
+    .header { background: #d32f2f; padding: 10px; text-align: center; font-weight: bold; font-size: 14px; }
+    .pro-scoreboard { background: linear-gradient(135deg, #102a5c 0%, #1a3c7a 100%); padding: 20px 10px; border-bottom: 4px solid #1565c0; }
+    .team-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 15px; }
+    .team-name { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+    .team-score { font-size: 48px; font-weight: 900; font-family: 'Impact', sans-serif; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    .final-badge { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 14px; border: 1px solid rgba(255,255,255,0.3); }
+    .rheb-box { background: rgba(0,0,0,0.3); margin: 0 10px; border-radius: 8px; padding: 10px; }
+    .rheb-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
+    .rheb-table th { color: #aaa; font-weight: normal; padding-bottom: 5px; font-size: 12px; }
+    .rheb-table td { font-weight: bold; padding: 5px 0; }
+    .val-r { color: #ffeb3b; font-size: 16px; }
+    .tabs { display: flex; background: #1e1e1e; border-bottom: 1px solid #333; margin-top: 0; }
+    .tab { flex: 1; padding: 15px; text-align: center; font-weight: bold; color: #888; cursor: pointer; transition: 0.2s; }
+    .tab.active { color: #fff; border-bottom: 3px solid #d32f2f; background: #252525; }
+    .content-box { display: none; padding: 10px; background: #f0f2f5; min-height: 500px; color: #333; }
+    .content-box.active { display: block; }
+    .table-card { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
+    .table-title { padding: 10px 15px; background: #e3f2fd; font-weight: bold; color: #1565c0; border-bottom: 1px solid #ddd; font-size: 14px; }
+    .stats-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; white-space: nowrap; }
+    .stats-table th { background: #fafafa; padding: 8px; border-bottom: 2px solid #eee; color: #555; }
+    .stats-table td { padding: 8px; border-bottom: 1px solid #eee; }
+    .sub-player td { background-color: #f9f9f9; color: #666; } /* 대타 구분 */
+    .log-item { background: #fff; padding: 10px 15px; margin-bottom: 8px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 13px; }
+    .log-time { color: #888; font-size: 11px; margin-bottom: 4px; display: block; }
+    .log-sys { text-align: center; background: #e0e0e0; color: #666; border-radius: 15px; padding: 4px; font-size: 11px; margin: 10px 0; }
+    .log-res { color: #d32f2f; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="header">경기 상세 결과</div>
+  <div id="loading" style="text-align:center; padding:50px; color:#aaa;">데이터 불러오는 중...</div>
+
+  <div id="mainView" style="display:none;">
+    <div class="pro-scoreboard">
+      <div class="team-header">
+        <div style="text-align:left;"><div class="team-name" id="tn_away">AWAY</div></div>
+        <div style="text-align:center;">
+          <div class="final-badge">경기 종료</div>
+          <div class="team-score"><span id="sc_away">0</span> : <span id="sc_home">0</span></div>
+        </div>
+        <div style="text-align:right;"><div class="team-name" id="tn_home">HOME</div></div>
+      </div>
+      <div class="rheb-box">
+        <table class="rheb-table">
+          <thead><tr><th>TEAM</th><th>R</th><th>H</th><th>E</th><th>B</th></tr></thead>
+          <tbody>
+            <tr><td id="t_a">AWAY</td><td class="val-r" id="r_a">0</td><td id="h_a">0</td><td id="e_a">0</td><td id="b_a">0</td></tr>
+            <tr><td id="t_h">HOME</td><td class="val-r" id="r_h">0</td><td id="h_h">0</td><td id="e_h">0</td><td id="b_h">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('stats')">기록지</div>
+      <div class="tab" onclick="showTab('logs')">중계 로그</div>
+    </div>
+
+    <div id="stats" class="content-box active">
+      <div class="table-card">
+        <div class="table-title">타우루스 타자 기록</div>
+        <div style="overflow-x:auto;">
+          <table class="stats-table">
+            <thead><tr><th>순</th><th>이름</th><th>타석</th><th>타수</th><th>안타</th><th>타점</th><th>4사</th><th>삼진</th></tr></thead>
+            <tbody id="batBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-title">투수 기록</div>
+        <div style="overflow-x:auto;">
+          <table class="stats-table">
+            <thead><tr><th>팀</th><th>이름</th><th>투구수</th><th>스트</th><th>볼</th><th>삼진</th></tr></thead>
+            <tbody id="pitBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="logs" class="content-box"><div id="logList"></div></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMVkogwvzoQon3lo0_hiVewfoXxmvbYMU",
+      authDomain: "taurus-cbnu.firebaseapp.com",
+      databaseURL: "https://taurus-cbnu-default-rtdb.firebaseio.com",
+      projectId: "taurus-cbnu",
+      storageBucket: "taurus-cbnu.firebasestorage.app",
+      messagingSenderId: "598393475132",
+      appId: "1:598393475132:web:b266ef01509e6c20dd7339"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const archiveId = params.get('id') || params.get('archiveId');
+
+    window.showTab = (id) => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.content-box').forEach(b => b.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        document.getElementById(id).classList.add('active');
+    };
+
+    if (archiveId) {
+        get(ref(db, `archive/${archiveId}`)).then(snapshot => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                renderDetail(data.info, data.logs);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('mainView').style.display = 'block';
+            } else {
+                document.getElementById('loading').innerHTML = "❌ 기록을 찾을 수 없습니다.";
+            }
+        }).catch(err => {
+            document.getElementById('loading').textContent = "오류: " + err.message;
+        });
+    } else {
+        document.getElementById('loading').textContent = "잘못된 접근입니다.";
+    }
+
+    function renderDetail(info, logs) {
+        document.getElementById('tn_away').textContent = info.teams.away;
+        document.getElementById('tn_home').textContent = info.teams.home;
+        document.getElementById('sc_away').textContent = info.score.away;
+        document.getElementById('sc_home').textContent = info.score.home;
+        document.getElementById('t_a').textContent = info.teams.away.substring(0,3);
+        document.getElementById('t_h').textContent = info.teams.home.substring(0,3);
+        document.getElementById('r_a').textContent = info.score.away;
+        document.getElementById('r_h').textContent = info.score.home;
+
+        const st = info.stats || { away:{h:0,e:0,b:0}, home:{h:0,e:0,b:0} };
+        document.getElementById('h_a').textContent = st.away.h;
+        document.getElementById('e_a').textContent = st.away.e;
+        document.getElementById('b_a').textContent = st.away.b;
+        document.getElementById('h_h').textContent = st.home.h;
+        document.getElementById('e_h').textContent = st.home.e;
+        document.getElementById('b_h').textContent = st.home.b;
+
+        // ★ 기록지 렌더링 (호환성 확보)
+        const taurusKey = info.teams.home === 'TAURUS' ? 'home' : 'away';
+        // info.lineups[taurusKey]가 배열(9명)인지 확인
+        // 각 요소가 배열(대타포함)인지 객체(옛날버전)인지 확인
+        
+        const lineups = info.lineups[taurusKey];
+        const batBody = document.getElementById('batBody');
+        
+        if(lineups) {
+            // lineups는 항상 9개 슬롯
+            const slots = Array.isArray(lineups) ? lineups : Object.values(lineups);
+            
+            slots.forEach((slot, i) => {
+                // slot이 배열이면(새 버전), 객체면(구 버전)
+                const players = Array.isArray(slot) ? slot : [slot];
+                
+                players.forEach((p, subIdx) => {
+                    if(!p.name) return;
+                    // 대타면 스타일 다르게
+                    const isSub = subIdx > 0;
+                    const rowClass = isSub ? 'sub-player' : '';
+                    const nameDisplay = isSub ? `↳ ${p.name}` : p.name;
+                    
+                    batBody.innerHTML += `
+                        <tr class="${rowClass}">
+                            <td>${isSub ? '' : i+1}</td>
+                            <td style="font-weight:bold; color:#1565c0;">${nameDisplay}</td>
+                            <td>${p.pa||0}</td>
+                            <td>${p.ab||0}</td>
+                            <td style="color:#d32f2f; font-weight:bold;">${p.h||0}</td>
+                            <td>${p.rbi||0}</td>
+                            <td>${p.bb||0}</td>
+                            <td>${p.k||0}</td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        const pitBody = document.getElementById('pitBody');
+        ['away', 'home'].forEach(side => {
+            const p = info.pitchers[side];
+            const teamName = info.teams[side].substring(0,2);
+            pitBody.innerHTML += `<tr><td>${teamName}</td><td style="font-weight:bold;">${p.name}</td><td>${p.total}</td><td>${p.s}</td><td>${p.b}</td><td>${p.k}</td></tr>`;
+        });
+
+        const logList = document.getElementById('logList');
+        if (logs) {
+            const logArr = Object.values(logs);
+            logArr.forEach(l => {
+                const div = document.createElement('div');
+                if (l.text.includes('===')) {
+                    div.className = 'log-sys'; div.textContent = l.text;
+                } else {
+                    div.className = 'log-item';
+                    let content = `<span class="log-time">${l.time}</span>`;
+                    if (l.text.includes('▶')) {
+                        const parts = l.text.split('▶'); content += `${parts[0]} ▶ <span class="log-res">${parts[1]}</span>`;
+                    } else { content += `<span>${l.text}</span>`; }
+                    div.innerHTML = content;
+                }
+                logList.prepend(div); 
+            });
+        } else { logList.innerHTML = "<div style='text-align:center; padding:20px; color:#888;'>기록 없음</div>"; }
+    }
+  </script>
+</body>
+</html>
