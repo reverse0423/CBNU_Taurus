@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>경기 일정</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="schedule.js"></script>
+</head>
+
+<body>
+  <header class="top-nav">
+    <button class="back-btn" onclick="location.href='index.html'">◀</button>
+    <h1>📅 경기 일정</h1>
+    
+    <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; gap: 4px;">
+      <select id="typeSelector" style="font-size: 12px; padding: 4px 6px; border: 1px solid #ddd; border-radius: 6px; background: #fff; color: #333; font-family: inherit;">
+        <option value="전체">모든 경기</option>
+        <option value="대학부">대학부</option>
+        <option value="사회인">사회인</option>
+      </select>
+      <select id="yearSelector" style="font-size: 12px; padding: 4px 6px; border: 1px solid #ddd; border-radius: 6px; background: #fff; color: #333; font-family: inherit;"></select>
+    </div>
+  </header>
+
+  <div id="scheduleContainer" class="schedule-container"></div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" onclick="location.href='index.html'">메인</button>
+    <button class="nav-btn active" onclick="location.href='schedule.html'">일정</button>
+    <button class="nav-btn" onclick="location.href='records.html'">기록</button>
+    <button class="nav-btn" onclick="location.href='players.html'">선수</button>
+  </nav>
+</body>
+</html>
