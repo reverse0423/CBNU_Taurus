@@ -1172,8 +1172,8 @@
     "location": "청원야구장",
     "type": "청주 북부리그",
     "opponent": "MALO",
-    "score": "5:4",
-    "result": "승",
+    "score": "",
+    "result": "",
     "detailId": "2026-06",
     "detailed": ""
    },
@@ -1183,8 +1183,8 @@
     "location": "내수1야구장",
     "type": "청주 북부리그",
     "opponent": "청주 스왈로우즈",
-    "score": "11:8",
-    "result": "승",
+    "score": "",
+    "result": "",
     "detailId": "2026-07",
     "detailed": ""
    },
@@ -1201,7 +1201,7 @@
    },
              {
     "date": "2026-05-01",
-    "time": "20:00",
+    "time": "18:00",
     "location": "부강야구장",
     "type": "청주,세종 대학리그",
     "opponent": "고려대학교 템페스트",
@@ -1209,17 +1209,6 @@
     "result": "",
     "detailId": "2026-09",
     "detailed": ""
-   },
-   {
-    "date": "2026-05-09",
-    "time": "14:00",
-    "location": "청원야구장",
-    "type": "청주 북부리그",
-    "opponent": "kt",
-    "score": "",
-    "result": "",
-    "detailId": "2026-10",
-    "detailed": ""
    }
   ]
-}
+  }
