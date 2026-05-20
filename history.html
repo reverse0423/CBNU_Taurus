@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>팀 히스토리</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top-nav">
+    <button class="back-btn" onclick="location.href='index.html'">◀</button>
+    <h1>팀 히스토리</h1>
+  </header>
+
+  <main class="container history-page">
+    <section class="history-hero">
+      <div>
+        <span class="eyebrow">TAURUS ARCHIVE</span>
+        <h2>시즌과 상대 전적</h2>
+      </div>
+      <strong id="history-total">-</strong>
+    </section>
+
+    <section class="history-section">
+      <h2>연도별 전적</h2>
+      <div id="year-history" class="history-grid"></div>
+    </section>
+
+    <section class="history-section">
+      <h2>상대팀별 전적</h2>
+      <div id="opponent-history" class="table-wrapper compact-table"></div>
+    </section>
+
+    <section class="history-section">
+      <h2>누적 기록 TOP 10</h2>
+      <div id="career-leaders" class="leader-grid"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" onclick="location.href='index.html'">메인</button>
+    <button class="nav-btn" onclick="location.href='schedule.html'">일정</button>
+    <button class="nav-btn" onclick="location.href='records.html'">기록</button>
+    <button class="nav-btn" onclick="location.href='players.html'">선수</button>
+  </nav>
+
+  <script src="history.js"></script>
+</body>
+</html>

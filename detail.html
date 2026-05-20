@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>경기 상세 기록</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top-nav detail-top-nav">
+    <button class="back-btn" onclick="history.length > 1 ? history.back() : location.href='schedule.html'">◀</button>
+    <h1 id="title">경기 상세 기록</h1>
+  </header>
+
+  <div id="detail-loading" class="detail-page">
+    <section class="detail-section">
+      <h2>경기 상세 기록을 불러오는 중...</h2>
+    </section>
+  </div>
+
+  <main id="detail-page" class="detail-page" style="display:none;">
+    <section class="detail-hero">
+      <div class="detail-meta">
+        <span id="date"></span>
+        <span id="venue"></span>
+        <span id="status"></span>
+      </div>
+      <div id="scoreboard"></div>
+    </section>
+
+    <section class="detail-section">
+      <h2>경기 요약</h2>
+      <div id="game-summary" class="game-summary-grid"></div>
+    </section>
+
+    <section class="share-card-section">
+      <div id="share-card" class="share-card"></div>
+    </section>
+
+    <section class="detail-section">
+      <h2>타격 기록</h2>
+      <div id="batting-home"></div>
+      <div id="batting-away"></div>
+    </section>
+
+    <section class="detail-section">
+      <h2>투구 기록</h2>
+      <div id="pitching-home"></div>
+      <div id="pitching-away"></div>
+    </section>
+
+    <section class="detail-section">
+      <h2>경기 흐름</h2>
+      <div id="plays"></div>
+    </section>
+  </main>
+
+  <script src="detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>데이터 검사</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top-nav">
+    <button class="back-btn" onclick="location.href='index.html'">◀</button>
+    <h1>데이터 검사</h1>
+  </header>
+
+  <main class="container check-page">
+    <section class="history-hero">
+      <div>
+        <span class="eyebrow">DATA HEALTH</span>
+        <h2>JSON 연결 상태</h2>
+      </div>
+      <strong id="check-total">검사 중</strong>
+    </section>
+
+    <section class="history-section">
+      <h2>검사 결과</h2>
+      <div id="check-list" class="check-list"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" onclick="location.href='index.html'">메인</button>
+    <button class="nav-btn" onclick="location.href='schedule.html'">일정</button>
+    <button class="nav-btn" onclick="location.href='records.html'">기록</button>
+    <button class="nav-btn" onclick="location.href='players.html'">선수</button>
+  </nav>
+
+  <script src="data-check.js"></script>
+</body>
+</html>
