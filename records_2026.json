@@ -1,4 +1,4 @@
-   [     {
+[     {
     "number": "3",
     "name": "배대환",
     "pa": 6.0,
@@ -36,8 +36,8 @@
     "pa": 30.0,
     "ab": 27.0,
     "hits": 14.0,
-    "double": 5,
-    "triple": 4,
+    "double": 6,
+    "triple": 1,
     "hr": 0,
     "RBI": 15.0,
     "RUN": 10.0,
@@ -212,8 +212,8 @@
     "pa": 30.0,
     "ab": 27.0,
     "hits": 16.0,
-    "double": 2,
-    "triple": 0,
+    "double": 1,
+    "triple": 4,
     "hr": 2,
     "RBI": 17.0,
     "RUN": 13.0,
