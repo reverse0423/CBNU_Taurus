@@ -1,18 +1,18 @@
- [
+   [
      {
     "number": "10",       
     "name": "신진우",
-    "games": 7,
-    "innings": 19.1,
+    "games": 8,
+    "innings": 21.2,
     "wins": 5,
     "losses": 0,
     "holds": 0,
     "saves": 0,
-    "so": 29,
-    "bb": 15,
+    "so": 33,
+    "bb": 17,
     "hbp": 1,
-    "runs": 22,
-    "er": 6
+    "runs": 24,
+    "er": 8
     },
     {
     "number": "27",       
@@ -47,31 +47,31 @@
      {
     "number": "64",       
     "name": "양현우",
-    "games": 3,
-    "innings": 11.33,
-    "wins": 3,
+    "games": 5,
+    "innings": 14.53,
+    "wins": 4,
     "losses": 0,
     "holds": 0,
     "saves": 0,
-    "so": 11,
-    "bb": 8,
+    "so": 15,
+    "bb": 14,
     "hbp": 2,
-    "runs": 11,
-    "er": 5
+    "runs": 16,
+    "er": 9
     },
      {
     "number": "29",       
     "name": "함동우",
-    "games": 2,
-    "innings": 4,
+    "games": 3,
+    "innings": 6,
     "wins": 1,
     "losses": 0,
     "holds": 0,
     "saves": 0,
-    "so": 6,
-    "bb": 8,
+    "so": 9,
+    "bb": 12,
     "hbp": 1,
-    "runs": 5,
+    "runs": 12,
     "er": 5
      }
 ]
