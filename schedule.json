@@ -1425,9 +1425,31 @@
     "location": "청주야구장",
     "type": "청주시장배생활체육대회",
     "opponent": "이스크라",
-    "score": ":",
-    "result": "",
-    "detailId": "2026-29",
+    "score": "7:2",
+    "result": "승",
+    "detailId": "2026-30",
+    "detailed": ""
+   },
+   {
+    "date": "2026-09-06",
+    "time": "15:00",
+    "location": "청주야구장",
+    "type": "청주시장배생활체육대회",
+    "opponent": "알바트로스",
+    "score": "7:6",
+    "result": "승",
+    "detailId": "2026-31",
+    "detailed": ""
+   },
+   {
+    "date": "2026-09-12",
+    "time": "10:00",
+    "location": "내수3야구장",
+    "type": "청주시 북부리그",
+    "opponent": "타우루스 메모리즈",
+    "score": "10:6",
+    "result": "승",
+    "detailId": "2026-32",
     "detailed": ""
    }
   ]
