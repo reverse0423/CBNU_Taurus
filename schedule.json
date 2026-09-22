@@ -1469,8 +1469,8 @@
     "location": "내수1야구장",
     "type": "청주시 북부리그",
     "opponent": "KT 충북사이버스",
-    "score": "",
-    "result": "",
+    "score": "10:3",
+    "result": "승",
     "detailId": "2026-34",
     "detailed": ""
    },
@@ -1480,8 +1480,8 @@
     "location": "카이스트 운동장",
     "type": "북남전",
     "opponent": "충남대학교 백마",
-    "score": "",
-    "result": "",
+    "score": "3:4",
+    "result": "패",
     "detailId": "2026-35",
     "detailed": ""
    },
