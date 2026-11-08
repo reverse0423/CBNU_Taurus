@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>선수 프로필</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top-nav">
+    <button class="back-btn" onclick="history.back()">◀</button>
+    <h1>선수 프로필</h1>
+  </header>
+
+  <main class="container">
+    <table class="profile-table">
+      <tr><th>번호</th><td id="number">–</td></tr>
+      <tr><th>이름</th><td id="name">–</td></tr>
+      <tr><th>생년월일</th><td id="birth">–</td></tr>
+      <tr><th>출신 고교</th><td id="highschool">–</td></tr>
+      <tr><th>전공</th><td id="major">–</td></tr>
+      <tr><th>포지션</th><td id="position">–</td></tr>
+    </table>
+
+    <section id="player-summary" class="player-summary">
+      <div class="summary-card"><span>선택 시즌</span><strong id="sum-year">2026</strong></div>
+      <div class="summary-card"><span>OPS</span><strong id="sum-ops">-</strong></div>
+      <div class="summary-card"><span>WAR</span><strong id="sum-war">-</strong></div>
+      <div class="summary-card"><span>ERA / pWAR</span><strong id="sum-pitch">-</strong></div>
+    </section>
+
+    <details class="summary-box" style="text-align:left;font-weight:normal">
+      <summary><strong>내 WAR는 어떻게 계산됐나요?</strong></summary>
+      <div id="war-breakdown"></div>
+      <p><strong>총 WAR = 타자 WAR + 투수 pWAR.</strong> WAR은 선택한 연도와 대회에 등록된 타우루스 기록을 기준으로 추정한 기여도입니다. 대회나 연도를 바꾸면 비교 기준도 바뀝니다.</p>
+      <p><strong>타자 WAR</strong>은 팀 평균 대비 타격 기여, 도루 성공 1개당 0.10점, 타석당 0.020점의 합을 7.5로 나눈 값입니다. 타격 기여는 선수와 팀의 wOBA 차이를 1.15로 나눈 뒤 타석을 곱합니다. wOBA는 볼넷과 안타 종류마다 다른 가치를 주는 출루 지표입니다. 수비와 도루 실패는 계산에 포함되지 않습니다.</p>
+      <p><strong>wOBA 가중치</strong>는 일반 볼넷 0.69, 몸에 맞는 공 0.72, 단타 0.89, 2루타 1.27, 3루타 1.62, 홈런 2.10입니다. 가중합을 타수·일반 볼넷·몸에 맞는 공·희생플라이의 합으로 나눕니다. 0타석이면 타자 WAR은 0입니다.</p>
+      <p><strong>투수 pWAR</strong>은 팀 평균자책점의 1.20배에서 선수 FIP를 뺀 뒤, 이닝을 7로 나눈 값을 곱하고 7.5로 나눕니다. FIP는 피홈런 13점, 볼넷·사구 3점, 탈삼진 −2점을 합산해 이닝으로 나눈 뒤, 팀 평균자책점에 맞춰 보정합니다.</p>
+      <small>표시된 항목별 숫자는 반올림한 값입니다. 총 WAR은 반올림하기 전 값으로 계산합니다.</small>
+    </details>
+
+    <section id="career-highlights" class="career-highlights">
+      <h2>커리어 하이라이트</h2>
+      <div id="career-highlight-list" class="highlight-list">
+        <p>커리어 기록을 계산하는 중...</p>
+      </div>
+    </section>
+
+    <div class="controls">
+      <select id="year-select">
+        <option value="2026" selected>2026년</option>
+        <option value="2025">2025년</option>
+        <option value="2024">2024년</option>
+        <option value="2023">2023년</option>
+        <option value="2022">2022년</option>
+        <option value="total">통산</option>
+      </select>
+      <select id="competition-select" aria-label="대회 및 리그" disabled>
+        <option value="all">전체 대회</option>
+        <option value="cheongju-mayor">청주시장기</option>
+        <option value="duba">DUBA</option>
+        <option value="cheongju-north">청주북부리그</option>
+        <option value="kuba-yanggu">KUBA 양구</option>
+        <option value="kuba-jecheon">KUBA 제천</option>
+        <option value="kcba-siheung">KCBA 시흥</option>
+      </select>
+    </div>
+
+    <div class="type-toggle">
+      <button id="btn-bat" class="active">타격 기록</button>
+      <button id="btn-pit">투수 기록</button>
+    </div>
+
+    <section id="stats-grid" class="stats-grid">
+      <div class="grid-header">타율</div><div class="grid-header">타수</div>
+      <div class="grid-header">안타</div><div class="grid-header">2루타</div>
+      <div class="grid-header">3루타</div><div class="grid-header">홈런</div>
+      
+      <div class="grid-value" id="avg">–</div><div class="grid-value" id="ab">–</div>
+      <div class="grid-value" id="hits">–</div><div class="grid-value" id="double">–</div>
+      <div class="grid-value" id="triple">–</div><div class="grid-value" id="hr">–</div>
+      
+      <div class="grid-header">4구</div><div class="grid-header">사구</div>
+      <div class="grid-header">타점</div><div class="grid-header">장타율</div>
+      <div class="grid-header">출루율</div><div class="grid-header">OPS</div>
+      
+      <div class="grid-value" id="bb">–</div><div class="grid-value" id="hbp">–</div>
+      <div class="grid-value" id="RBI">–</div><div class="grid-value" id="slg">–</div>
+      <div class="grid-value" id="obp">–</div><div class="grid-value" id="ops">–</div>
+    </section>
+
+    <section id="pitch-stats-grid" class="stats-grid" style="display: none;">
+      <div class="grid-header">ERA</div><div class="grid-header">이닝</div>
+      <div class="grid-header">승</div><div class="grid-header">패</div>
+      <div class="grid-header">세이브</div><div class="grid-header">홀드</div>
+      <div class="grid-value" id="p-era">–</div><div class="grid-value" id="p-ip">–</div>
+      <div class="grid-value" id="p-w">–</div><div class="grid-value" id="p-l">–</div>
+      <div class="grid-value" id="p-sv">–</div><div class="grid-value" id="p-hld">–</div>
+
+      <div class="grid-header">탈삼진</div><div class="grid-header">볼넷</div>
+      <div class="grid-header">사구</div><div class="grid-header">자책점</div>
+      <div class="grid-header">실점</div><div class="grid-header">pWAR</div>
+      <div class="grid-value" id="p-so">–</div><div class="grid-value" id="p-bb">–</div>
+      <div class="grid-value" id="p-hbp">–</div><div class="grid-value" id="p-er">–</div>
+      <div class="grid-value" id="p-r">–</div><div class="grid-value" id="p-war">–</div>
+    </section>
+
+    <div id="record-box">
+      <p style="text-align:center;">기록을 불러오는 중...</p>
+    </div>
+
+    <div id="salary-box"></div>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" onclick="location.href='index.html'">메인</button>
+    <button class="nav-btn" onclick="location.href='schedule.html'">일정</button>
+    <button class="nav-btn" onclick="location.href='records.html'">기록</button>
+    <button class="nav-btn active" onclick="location.href='players.html'">선수</button>
+  </nav>
+
+  <script src="player.js?v=war-weights-2026"></script>
+</body>
+</html>
